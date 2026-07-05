@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  background-color: #07070A;
+  color: #F3EFE7;
+}
+
+body {
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection {
+  background: #C9A24B;
+  color: #07070A;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #07070A;
+}
+::-webkit-scrollbar-thumb {
+  background: #3a311c;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C9A24B;
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(19, 19, 22, 0.45);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(201, 162, 75, 0.16);
+  }
+
+  .glass-strong {
+    background: rgba(12, 12, 16, 0.65);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgba(201, 162, 75, 0.22);
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(120deg, #8A6F35 0%, #F0CD7C 35%, #C9A24B 60%, #8A6F35 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .eyebrow {
+    @apply font-body text-[12px] text-gold/80;
+    letter-spacing: 0.02em;
+  }
+
+  .hairline {
+    background: linear-gradient(90deg, transparent, rgba(201,162,75,0.55), transparent);
+    height: 1px;
+  }
+
+  .input-field {
+    @apply w-full bg-charcoal/60 border border-gold/15 px-4 py-3 font-body text-sm text-bone placeholder:text-bone-faint outline-none transition-colors;
+  }
+  .input-field:focus {
+    @apply border-gold/60;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
