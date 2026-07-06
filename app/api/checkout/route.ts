@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
     if (
-      !WC_URL ||
+      !WC_URL ||ّّ
       !CK ||
       !CS ||
       !ZARINPAL_MERCHANT_ID ||
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
     console.log("===== CREATE PAYMENT =====");
 
     const paymentRes = await fetch(
-      "https://api.zarinpal.com/pg/v4/payment/request.json",
+      "https://payment.zarinpal.com/pg/v4/payment/request.json"
       {
         method: "POST",
         headers: {
