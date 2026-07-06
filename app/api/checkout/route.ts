@@ -18,11 +18,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 🧾 WooCommerce order
+    // 🧾 1. ساخت سفارش ووکامرس
     const orderRes = await fetch(`${WC_URL}/wp-json/wc/v3/orders`, {
       method: "POST",
       headers: {
-        Authorization: "Basic " + Buffer.from(`${CK}:${CS}`).toString("base64"),
+        Authorization:
+          "Basic " + Buffer.from(`${CK}:${CS}`).toString("base64"),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest) {
 
     const orderId = order.id;
 
-    // 💳 Zarinpal request
+    // 💳 2. درخواست زرین‌پال (FIX اصلی اینجاست)
     const paymentRes = await fetch(
       "https://api.zarinpal.com/pg/v4/payment/request.json",
       {
@@ -65,14 +66,32 @@ export async function POST(req: NextRequest) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           merchant_id: ZARINPAL_MERCHANT_ID,
-          amount: Number(total),
-         callback_url: `${BASE_URL}/api/payment/verify?order=${orderId}`,
-         description: `Order #${orderId}`,
+
+          // 🔥 مهم: زرین‌پال ریال می‌خواهد نه تومان
+          amount: Number(total) * 10,
+
+          // 🔥 callback باید FRONTEND باشد نه API
+          callback_url: `${BASE_URL}/checkout/success?order=${orderId}`,
+
+          description: `Order #${orderId}`,
         }),
       }
     );
 
-    const payment = await paymentRes.json();
+    const paymentText = await paymentRes.text();
+    let payment;
+
+    try {
+      payment = JSON.parse(paymentText);
+    } catch {
+      return NextResponse.json(
+        {
+          error: "Zarinpal invalid response",
+          raw: paymentText,
+        },
+        { status: 500 }
+      );
+    }
 
     console.log("ZARINPAL RESPONSE:", payment);
 
@@ -80,7 +99,10 @@ export async function POST(req: NextRequest) {
 
     if (!authority) {
       return NextResponse.json(
-        { error: "Zarinpal failed", detail: payment },
+        {
+          error: "Zarinpal failed",
+          detail: payment,
+        },
         { status: 500 }
       );
     }
