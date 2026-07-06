@@ -9,13 +9,16 @@ import {
 } from "react";
 
 type User = {
+  id?: string;
+  fullName?: string;
   email: string;
-  name?: string;
+  phone?: string;
 };
 
 type AuthContextValue = {
   user: User | null;
   ready: boolean;
+
   register: (
     fullName: string,
     email: string,
@@ -41,13 +44,11 @@ export function AuthProvider({
   children: ReactNode;
 }) {
 
-
-  const [user,setUser] = useState<User|null>(null);
-  const [ready,setReady] = useState(false);
-
+  const [user, setUser] = useState<User | null>(null);
+  const [ready, setReady] = useState(false);
 
 
-  useEffect(()=>{
+  useEffect(() => {
 
     const savedUser = localStorage.getItem("user");
 
@@ -93,6 +94,14 @@ export function AuthProvider({
       }
 
 
+      const userData:User = {
+        id:data.user?.id || "",
+        fullName:data.user?.fullName || "",
+        email:data.user?.email || "",
+        phone:data.user?.phone || "",
+      };
+
+
       localStorage.setItem(
         "token",
         data.token
@@ -101,11 +110,11 @@ export function AuthProvider({
 
       localStorage.setItem(
         "user",
-        JSON.stringify(data.user)
+        JSON.stringify(userData)
       );
 
 
-      setUser(data.user);
+      setUser(userData);
 
 
       return {
@@ -113,11 +122,11 @@ export function AuthProvider({
       };
 
 
-    }catch(e){
+    }catch(error){
 
       return {
         ok:false,
-        error:"خطا در اتصال"
+        error:"خطا در اتصال به سرور"
       };
 
     }
@@ -135,7 +144,6 @@ export function AuthProvider({
 
     try{
 
-
       const res = await fetch("/api/register",{
         method:"POST",
         headers:{
@@ -151,7 +159,6 @@ export function AuthProvider({
 
 
       const data = await res.json();
-
 
 
       if(!res.ok || !data.ok){
@@ -216,17 +223,14 @@ export function AuthProvider({
 
 
 
-
 export function useAuth(){
 
   const ctx = useContext(AuthContext);
 
   if(!ctx){
-
     throw new Error(
       "useAuth باید داخل AuthProvider استفاده شود"
     );
-
   }
 
 
