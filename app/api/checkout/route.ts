@@ -5,11 +5,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { items, total, address } = body;
 
-    const WC_URL = process.env.WORDPRESS_URL;
-    const CK = process.env.WC_CONSUMER_KEY;
-    const CS = process.env.WC_CONSUMER_SECRET;
-    const ZARINPAL_MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID;
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    const WC_URL = process.env.WORDPRESS_URL!;
+    const CK = process.env.WC_CONSUMER_KEY!;
+    const CS = process.env.WC_CONSUMER_SECRET!;
+    const ZARINPAL_MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID!;
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
     if (!WC_URL || !CK || !CS || !ZARINPAL_MERCHANT_ID || !BASE_URL) {
       return NextResponse.json(
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 🧾 1. ساخت سفارش ووکامرس
+    // 🧾 1. ساخت سفارش در ووکامرس
     const orderRes = await fetch(`${WC_URL}/wp-json/wc/v3/orders`, {
       method: "POST",
       headers: {
@@ -58,40 +58,24 @@ export async function POST(req: NextRequest) {
 
     const orderId = order.id;
 
-    // 💳 2. درخواست زرین‌پال (FIX اصلی اینجاست)
+    // 💳 2. درخواست زرین‌پال
     const paymentRes = await fetch(
       "https://api.zarinpal.com/pg/v4/payment/request.json",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           merchant_id: ZARINPAL_MERCHANT_ID,
-
-          // 🔥 مهم: زرین‌پال ریال می‌خواهد نه تومان
-          amount: Number(total) * 10,
-
-          // 🔥 callback باید FRONTEND باشد نه API
+          amount: Number(total) * 10, // ⚠️ ریال
           callback_url: `${BASE_URL}/checkout/success?order=${orderId}`,
-
           description: `Order #${orderId}`,
         }),
       }
     );
 
-    const paymentText = await paymentRes.text();
-    let payment;
-
-    try {
-      payment = JSON.parse(paymentText);
-    } catch {
-      return NextResponse.json(
-        {
-          error: "Zarinpal invalid response",
-          raw: paymentText,
-        },
-        { status: 500 }
-      );
-    }
+    const payment = await paymentRes.json();
 
     console.log("ZARINPAL RESPONSE:", payment);
 
@@ -99,10 +83,7 @@ export async function POST(req: NextRequest) {
 
     if (!authority) {
       return NextResponse.json(
-        {
-          error: "Zarinpal failed",
-          detail: payment,
-        },
+        { error: "Zarinpal failed", detail: payment },
         { status: 500 }
       );
     }
@@ -112,6 +93,8 @@ export async function POST(req: NextRequest) {
       orderId,
     });
   } catch (err: any) {
+    console.log("CHECKOUT ERROR:", err);
+
     return NextResponse.json(
       { error: err.message || "server error" },
       { status: 500 }
