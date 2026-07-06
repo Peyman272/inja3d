@@ -21,58 +21,64 @@ export default function RegisterPage() {
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    if (!fullName || !email || !phone || !password) {
-      setError("لطفاً همه‌ی فیلدها را تکمیل کنید.");
-      return;
-    }
-
-    if (!/^09\d{9}$/.test(phone)) {
-      setError("شماره موبایل نامعتبر است.");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("رمز عبور باید حداقل ۶ کاراکتر باشد.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("رمز عبور و تکرار آن یکسان نیستند.");
-      return;
-    }
-
-    setSubmitting(true);
-
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fullName,
-          email,
-          phone,
-          password,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.ok) {
-        throw new Error(data.error || "ثبت‌نام ناموفق بود");
-      }
-
-      router.push("/account");
-    } catch (err: any) {
-      setError(err.message || "خطا در ثبت‌نام");
-    } finally {
-      setSubmitting(false);
-    }
+  // ✅ validation ها
+  if (!fullName || !email || !phone || !password) {
+    setError("لطفاً همه‌ی فیلدها را تکمیل کنید.");
+    return;
   }
+
+  if (!/^09\d{9}$/.test(phone)) {
+    setError("شماره موبایل نامعتبر است.");
+    return;
+  }
+
+  if (password.length < 6) {
+    setError("رمز عبور باید حداقل ۶ کاراکتر باشد.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setError("رمز عبور و تکرار آن یکسان نیست.");
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    // 🚀 ارسال به API خودت در Next.js
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fullName,
+        email,
+        phone,
+        password,
+      }),
+    });
+
+    const data = await res.json();
+
+    // ❌ اگر API خطا داد
+    if (!res.ok || !data.ok) {
+      setError(data.error || "ثبت‌نام ناموفق بود");
+      return;
+    }
+
+    // ✅ موفق
+    router.push("/account");
+
+  } catch (err: any) {
+    setError("خطا در ارتباط با سرور");
+  } finally {
+    setSubmitting(false);
+  }
+}
 
   return (
     <main className="relative">
