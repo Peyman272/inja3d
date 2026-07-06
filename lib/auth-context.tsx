@@ -7,94 +7,229 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { User } from "./types";
 
-type StoredUser = User & { password: string };
+type User = {
+  email: string;
+  name?: string;
+};
 
 type AuthContextValue = {
   user: User | null;
   ready: boolean;
-  register: (fullName: string, email: string, phone: string, password: string) => { ok: boolean; error?: string };
-  login: (email: string, password: string) => { ok: boolean; error?: string };
+  register: (
+    fullName: string,
+    email: string,
+    phone: string,
+    password: string
+  ) => Promise<{ ok: boolean; error?: string }>;
+
+  login: (
+    identifier: string,
+    password: string
+  ) => Promise<{ ok: boolean; error?: string }>;
+
   logout: () => void;
 };
 
+
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
-const USERS_KEY = "inja3d-users";
-const SESSION_KEY = "inja3d-session";
 
-function readUsers(): StoredUser[] {
-  try {
-    const raw = window.localStorage.getItem(USERS_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
 
-function writeUsers(users: StoredUser[]) {
-  window.localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
+export function AuthProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [ready, setReady] = useState(false);
 
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(SESSION_KEY);
-      if (raw) setUser(JSON.parse(raw));
-    } catch {
-      // ignore
+  const [user,setUser] = useState<User|null>(null);
+  const [ready,setReady] = useState(false);
+
+
+
+  useEffect(()=>{
+
+    const savedUser = localStorage.getItem("user");
+
+    if(savedUser){
+      setUser(JSON.parse(savedUser));
     }
+
     setReady(true);
-  }, []);
 
-  function register(fullName: string, email: string, phone: string, password: string) {
-    const users = readUsers();
-    if (users.some((u) => u.email === email)) {
-      return { ok: false, error: "این ایمیل قبلاً ثبت شده است." };
+  },[]);
+
+
+
+  async function login(
+    identifier:string,
+    password:string
+  ){
+
+    try{
+
+      const res = await fetch("/api/login",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          identifier,
+          password
+        })
+      });
+
+
+      const data = await res.json();
+
+
+      if(!res.ok || !data.ok){
+
+        return {
+          ok:false,
+          error:data.error || "ورود ناموفق بود"
+        };
+
+      }
+
+
+      localStorage.setItem(
+        "token",
+        data.token
+      );
+
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
+
+
+      setUser(data.user);
+
+
+      return {
+        ok:true
+      };
+
+
+    }catch(e){
+
+      return {
+        ok:false,
+        error:"خطا در اتصال"
+      };
+
     }
-    const newUser: StoredUser = {
-      id: `usr-${Date.now()}`,
-      fullName,
-      email,
-      phone,
-      password,
-    };
-    writeUsers([...users, newUser]);
-    const { password: _pw, ...publicUser } = newUser;
-    setUser(publicUser);
-    window.localStorage.setItem(SESSION_KEY, JSON.stringify(publicUser));
-    return { ok: true };
+
   }
 
-  function login(email: string, password: string) {
-    const users = readUsers();
-    const found = users.find((u) => u.email === email && u.password === password);
-    if (!found) {
-      return { ok: false, error: "ایمیل یا رمز عبور اشتباه است." };
+
+
+  async function register(
+    fullName:string,
+    email:string,
+    phone:string,
+    password:string
+  ){
+
+    try{
+
+
+      const res = await fetch("/api/register",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          fullName,
+          email,
+          phone,
+          password
+        })
+      });
+
+
+      const data = await res.json();
+
+
+
+      if(!res.ok || !data.ok){
+
+        return {
+          ok:false,
+          error:data.error || "ثبت نام ناموفق بود"
+        };
+
+      }
+
+
+      return {
+        ok:true
+      };
+
+
+    }catch{
+
+      return {
+        ok:false,
+        error:"خطا در اتصال"
+      };
+
     }
-    const { password: _pw, ...publicUser } = found;
-    setUser(publicUser);
-    window.localStorage.setItem(SESSION_KEY, JSON.stringify(publicUser));
-    return { ok: true };
+
   }
 
-  function logout() {
+
+
+
+  function logout(){
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
     setUser(null);
-    window.localStorage.removeItem(SESSION_KEY);
+
   }
+
+
 
   return (
-    <AuthContext.Provider value={{ user, ready, register, login, logout }}>
+
+    <AuthContext.Provider
+      value={{
+        user,
+        ready,
+        login,
+        register,
+        logout
+      }}
+    >
+
       {children}
+
     </AuthContext.Provider>
+
   );
+
 }
 
-export function useAuth() {
+
+
+
+export function useAuth(){
+
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth باید داخل AuthProvider استفاده شود");
+
+  if(!ctx){
+
+    throw new Error(
+      "useAuth باید داخل AuthProvider استفاده شود"
+    );
+
+  }
+
+
   return ctx;
+
 }
