@@ -4,52 +4,57 @@ import { useState } from "react";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState("");
 
-  async function handleSubmit() {
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
     setLoading(true);
-    setMsg("");
+    setMessage("");
 
     const res = await fetch("/api/forgot-password", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
     });
 
     const data = await res.json();
 
     setLoading(false);
-
-    if (!data.ok) {
-      setMsg(data.error);
-    } else {
-      setMsg("لینک بازیابی ایمیل شد 📩");
-    }
+    setMessage(data.message);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <div className="w-[350px] p-6 bg-zinc-900 rounded-xl">
-        <h1 className="text-xl mb-4">بازیابی رمز عبور</h1>
+    <div className="max-w-md mx-auto py-20">
+      <h1 className="text-3xl mb-6">بازیابی رمز عبور</h1>
 
+      <form onSubmit={handleSubmit}>
         <input
-          className="w-full p-2 text-black rounded"
-          placeholder="ایمیل یا شماره"
+          className="input-field w-full"
+          type="email"
+          placeholder="ایمیل"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
         <button
-          onClick={handleSubmit}
+          className="mt-4 w-full bg-gold py-3"
           disabled={loading}
-          className="w-full mt-4 bg-yellow-500 p-2 text-black"
         >
-          {loading ? "در حال ارسال..." : "ارسال لینک"}
+          {loading ? "در حال ارسال..." : "ارسال لینک بازیابی"}
         </button>
+      </form>
 
-        {msg && <p className="mt-3 text-sm">{msg}</p>}
-      </div>
+      {message && (
+        <p className="mt-5">
+          {message}
+        </p>
+      )}
     </div>
   );
 }
