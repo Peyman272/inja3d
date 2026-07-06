@@ -44,47 +44,51 @@ export default function CheckoutPage() {
     setAddress((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  setError("");
 
-    if (items.length === 0) {
-      setError("سبد خرید شما خالی است.");
-      return;
-    }
-    if (!address.fullName || !address.phone || !address.city || !address.addressLine || !address.postalCode) {
-      setError("لطفاً همه‌ی فیلدهای آدرس را تکمیل کنید.");
-      return;
-    }
-    if (!/^09\d{9}$/.test(address.phone)) {
-      setError("شماره موبایل را به‌درستی وارد کنید (مثال: ۰۹۱۲۳۴۵۶۷۸۹).");
-      return;
-    }
-
-    setSubmitting(true);
-
-    const order: Order = {
-      id: `INJA-${Date.now().toString().slice(-8)}`,
-      items,
-      total,
-      address,
-      paymentMethod: payment,
-      createdAt: new Date().toISOString(),
-    };
-
-    try {
-      const raw = window.localStorage.getItem("inja3d-orders");
-      const existing: Order[] = raw ? JSON.parse(raw) : [];
-      window.localStorage.setItem("inja3d-orders", JSON.stringify([order, ...existing]));
-    } catch {
-      // storage unavailable — proceed anyway
-    }
-
-    setTimeout(() => {
-      clearCart();
-      router.push(`/checkout/success?order=${order.id}`);
-    }, 900);
+  if (items.length === 0) {
+    setError("سبد خرید شما خالی است.");
+    return;
   }
+
+  if (!address.fullName || !address.phone || !address.city || !address.addressLine || !address.postalCode) {
+    setError("لطفاً همه‌ی فیلدهای آدرس را تکمیل کنید.");
+    return;
+  }
+
+  if (!/^09\d{9}$/.test(address.phone)) {
+    setError("شماره موبایل اشتباه است");
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items,
+        total,
+        address,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url; // 👉 رفتن به زرین‌پال
+    } else {
+      setError("خطا در اتصال به پرداخت");
+    }
+  } catch (err) {
+    setError("خطای سرور");
+  }
+
+  setSubmitting(false);
+}
 
   return (
     <main className="relative">
