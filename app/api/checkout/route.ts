@@ -11,28 +11,27 @@ export async function POST(req: NextRequest) {
     const ZARINPAL_MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID;
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-    if (
-      !WC_URL ||ّّ
-      !CK ||
-      !CS ||
-      !ZARINPAL_MERCHANT_ID ||
-      !BASE_URL
-    ) {
-      return NextResponse.json(
-        {
-          error: "ENV MISSING",
-          env: {
-            WC_URL: !!WC_URL,
-            CK: !!CK,
-            CS: !!CS,
-            ZARINPAL_MERCHANT_ID: !!ZARINPAL_MERCHANT_ID,
-            BASE_URL: !!BASE_URL,
-          },
-        },
-        { status: 500 }
-      );
-    }
-
+   if (
+  !WC_URL ||
+  !CK ||
+  !CS ||
+  !ZARINPAL_MERCHANT_ID ||
+  !BASE_URL
+) {
+  return NextResponse.json(
+    {
+      error: "ENV MISSING",
+      env: {
+        WC_URL: !!WC_URL,
+        CK: !!CK,
+        CS: !!CS,
+        ZARINPAL_MERCHANT_ID: !!ZARINPAL_MERCHANT_ID,
+        BASE_URL: !!BASE_URL,
+      },
+    },
+    { status: 500 }
+  );
+}
     console.log("===== CREATE ORDER =====");
 
     const orderRes = await fetch(`${WC_URL}/wp-json/wc/v3/orders`, {
