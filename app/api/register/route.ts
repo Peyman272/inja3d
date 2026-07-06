@@ -4,53 +4,73 @@ export async function POST(req: Request) {
   try {
     const { fullName, email, phone, password } = await req.json();
 
-    if (!email || !password) {
+    // 🔴 validation اولیه
+    if (!email || !password || !fullName) {
       return NextResponse.json(
         { ok: false, error: "اطلاعات ناقص است" },
         { status: 400 }
       );
     }
 
-    const consumerKey = process.env.WC_CONSUMER_KEY;
-    const consumerSecret = process.env.WC_CONSUMER_SECRET;
-    const baseUrl = process.env.WP_URL; // مثلا: https://your-site.com
+    const baseUrl = process.env.WORDPRESS_URL;
+    const key = process.env.WC_CONSUMER_KEY;
+    const secret = process.env.WC_CONSUMER_SECRET;
 
-    const auth = Buffer.from(
-      `${consumerKey}:${consumerSecret}`
-    ).toString("base64");
+    if (!baseUrl || !key || !secret) {
+      return NextResponse.json(
+        { ok: false, error: "ENV تنظیم نشده" },
+        { status: 500 }
+      );
+    }
 
-    const wpRes = await fetch(
-      `${baseUrl}/wp-json/wc/v3/customers`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ${auth}`,
+    // 🔥 مهم: WooCommerce REST API
+    const url = `${baseUrl}/wp-json/wc/v3/customers`;
+
+    const auth = Buffer.from(`${key}:${secret}`).toString("base64");
+
+    const wpRes = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${auth}`,
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        username: email,
+        first_name: fullName,
+        billing: {
+          phone: phone || "",
         },
-        body: JSON.stringify({
-          email,
-          password,
-          username: email,
-          first_name: fullName,
-          billing: {
-            phone,
-          },
-        }),
-      }
-    );
+        shipping: {
+          phone: phone || "",
+        },
+      }),
+    });
 
-    const data = await wpRes.json();
+    const text = await wpRes.text();
 
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = text;
+    }
+
+    console.log("🔥 WOOCOMMERCE RESPONSE:", data);
+
+    // ❌ اگر خطا بود
     if (!wpRes.ok) {
       return NextResponse.json(
         {
           ok: false,
-          error: data?.message || "خطا در ساخت کاربر",
+          error: data?.message || data || "خطا در ساخت کاربر",
         },
         { status: wpRes.status }
       );
     }
 
+    // ✅ موفق
     return NextResponse.json({
       ok: true,
       user: data,
