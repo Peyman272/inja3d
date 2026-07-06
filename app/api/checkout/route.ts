@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           merchant_id: ZARINPAL_MERCHANT_ID,
           amount: Number(total),
-          callback_url: `${BASE_URL}/checkout/success?order=${orderId}`,
+         callback_url: `${BASE_URL}/api/payment/verify?order=${orderId}`
           description: `Order #${orderId}`,
         }),
       }
