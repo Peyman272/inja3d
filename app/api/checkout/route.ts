@@ -82,21 +82,21 @@ export async function POST(req: NextRequest) {
 
     console.log("===== CREATE PAYMENT =====");
 
-    const paymentRes = await fetch(
-      "https://payment.zarinpal.com/pg/v4/payment/request.json"
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          merchant_id: ZARINPAL_MERCHANT_ID,
-          amount: Number(total) * 10,
-          callback_url: `${BASE_URL}/api/payment/verify?order=${order.id}`,
-          description: `Order #${order.id}`,
-        }),
-      }
-    );
+   const paymentRes = await fetch(
+  "https://payment.zarinpal.com/pg/v4/payment/request.json",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      merchant_id: ZARINPAL_MERCHANT_ID,
+      amount: Number(total) * 10,
+      callback_url: `${BASE_URL}/api/payment/verify?order=${order.id}`,
+      description: `Order #${order.id}`,
+    }),
+  }
+);
 
     console.log("PAYMENT STATUS:", paymentRes.status);
 
