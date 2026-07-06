@@ -1,23 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const ZARINPAL_MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID;
 const WC_URL = process.env.WORDPRESS_URL;
 const CK = process.env.WC_CONSUMER_KEY;
 const CS = process.env.WC_CONSUMER_SECRET;
-const ZARINPAL_MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID;
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const authority = searchParams.get("Authority");
+  const status = searchParams.get("Status");
+  const orderId = searchParams.get("order");
+
+  if (status !== "OK") {
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?status=failed`
+    );
+  }
+
   try {
-    const { searchParams } = new URL(req.url);
-
-    const authority = searchParams.get("Authority");
-    const status = searchParams.get("Status");
-    const orderId = searchParams.get("order");
-
-    if (!authority || status !== "OK") {
-      return NextResponse.json({ error: "Payment failed" }, { status: 400 });
-    }
-
-    // 💳 1. Verify زرین‌پال
+    // 💳 verify payment
     const verifyRes = await fetch(
       "https://api.zarinpal.com/pg/v4/payment/verify.json",
       {
@@ -26,23 +28,22 @@ export async function GET(req: NextRequest) {
         body: JSON.stringify({
           merchant_id: ZARINPAL_MERCHANT_ID,
           authority,
-          amount: 0, // ⚠️ اگر خواستی دقیق‌ترش کنیم بعداً از سفارش می‌کشیم
+          amount: 1000, // ⚠️ فعلاً تستی — بعداً باید واقعی کنی
         }),
       }
     );
 
     const result = await verifyRes.json();
 
-    if (result?.data?.code !== 100) {
-      return NextResponse.json({ error: "Zarinpal verify failed" }, { status: 400 });
-    }
+    if (result?.data?.code === 100) {
+      // ✅ پرداخت موفق
 
-    // 🧾 2. آپدیت سفارش در WooCommerce (paid)
-    if (orderId && WC_URL) {
+      // 🧾 آپدیت سفارش در WooCommerce
       await fetch(`${WC_URL}/wp-json/wc/v3/orders/${orderId}`, {
         method: "PUT",
         headers: {
-          Authorization: "Basic " + Buffer.from(`${CK}:${CS}`).toString("base64"),
+          Authorization:
+            "Basic " + Buffer.from(`${CK}:${CS}`).toString("base64"),
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -50,16 +51,18 @@ export async function GET(req: NextRequest) {
           status: "processing",
         }),
       });
+
+      return NextResponse.redirect(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?status=success&order=${orderId}`
+      );
     }
 
-    // ✅ 3. هدایت به success page
     return NextResponse.redirect(
-      new URL(`/checkout/success?order=${orderId}`, req.url)
+      `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?status=failed`
     );
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message || "verify error" },
-      { status: 500 }
+  } catch (err) {
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?status=error`
     );
   }
 }
