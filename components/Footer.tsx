@@ -105,19 +105,17 @@ export default function Footer() {
 
           <div className="flex justify-center items-center gap-8">
             <a
-              href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
-              target="_blank"
-              rel="noopener noreferrer"
-              referrerPolicy="origin"
-            >
-              <img
-                src="https://Trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
-                alt="نماد اعتماد الکترونیکی"
-                width="120"
-                height="120"
-                className="h-24 w-auto bg-white p-2 rounded-md"
-              />
-            </a>
+  referrerPolicy="origin"
+  target="_blank"
+  href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+>
+  <img
+    referrerPolicy="origin"
+    src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+    alt=""
+    style={{ cursor: "pointer" }}
+  />
+</a>
           </div>
         </div>
 
