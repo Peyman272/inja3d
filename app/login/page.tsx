@@ -71,7 +71,10 @@ localStorage.setItem(
     phone: data.user.phone || "",
   })
 );
-
+console.log(
+ "LOGIN SAVED USER:",
+ localStorage.getItem("user")
+);
 
 router.push("/account");
 
