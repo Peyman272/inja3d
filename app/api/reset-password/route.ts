@@ -2,46 +2,39 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { key, login, password } = await req.json();
+    const body = await req.json();
 
-    if (!key || !login || !password) {
-      return NextResponse.json(
-        { ok: false, error: "اطلاعات ناقص است" },
-        { status: 400 }
-      );
-    }
+    console.log("NEXT RESET BODY:", body);
 
-    const baseUrl = process.env.WORDPRESS_URL;
-
-    const res = await fetch(`${baseUrl}/wp-json/wp/v2/users/password-reset`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        key,
-        login,
-        password,
-      }),
-    });
+    const res = await fetch(
+      "https://wp.inja3d.ir/wp-json/inja3d/v1/reset-password",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
 
     const data = await res.json();
 
-    if (!res.ok) {
-      return NextResponse.json(
-        { ok: false, error: data.message || "خطا در تغییر رمز" },
-        { status: 400 }
-      );
-    }
+    console.log("WORDPRESS RESET RESPONSE:", data);
 
-    return NextResponse.json({
-      ok: true,
-      message: "رمز تغییر کرد",
-    });
-  } catch (err: any) {
+    return NextResponse.json(data);
+
+  } catch (error: any) {
+
+    console.log("RESET API ERROR:", error);
+
     return NextResponse.json(
-      { ok: false, error: err.message },
-      { status: 500 }
+      {
+        ok: false,
+        message: "خطای سرور",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }
