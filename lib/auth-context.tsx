@@ -50,27 +50,30 @@ export function AuthProvider({
   const [ready, setReady] = useState(false);
 
 
-useEffect(()=>{
+useEffect(() => {
 
-  try {
-
-    const savedUser = localStorage.getItem("user");
-
-    console.log("SAVED USER:", savedUser);
+  console.log("🔥 AUTH USE EFFECT RUN");
 
 
-    if(savedUser){
+  const savedUser = localStorage.getItem("user");
+  const savedToken = localStorage.getItem("token");
 
-      const parsedUser = JSON.parse(savedUser);
 
-      setUser(parsedUser);
+  console.log("🔥 AUTH LOCAL USER:", savedUser);
+  console.log("🔥 AUTH LOCAL TOKEN:", savedToken);
+
+
+  if (savedUser) {
+
+    try {
+
+      setUser(JSON.parse(savedUser));
+
+    } catch (error) {
+
+      console.log("USER PARSE ERROR:", error);
 
     }
-
-
-  } catch(error){
-
-    console.log("AUTH LOAD ERROR:",error);
 
   }
 
@@ -78,7 +81,8 @@ useEffect(()=>{
   setReady(true);
 
 
-},[]);
+}, []);
+  
   async function login(
     identifier:string,
     password:string
