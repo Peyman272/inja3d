@@ -96,19 +96,15 @@ export default function ResetPasswordPage() {
 
       const data = await res.json();
 
+console.log("RESET RESPONSE:", data);
 
-
-      if(!data.ok){
-
-        setError(
-          data.message ||
-          "خطا در تغییر رمز"
-        );
-
-        return;
-
-      }
-
+if(!data.ok){
+  setError(
+    data.message ||
+    "خطا در تغییر رمز"
+  );
+  return;
+}
 
 
       setMessage(
