@@ -7,9 +7,11 @@ import { motion } from "framer-motion";
 import { LogIn, Gem } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/lib/auth-context";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -30,53 +32,25 @@ export default function LoginPage() {
 
 
     try {
-
       setSubmitting(true);
 
 
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          identifier,
-          password,
-        }),
-      });
+      const result = await login(
+        identifier,
+        password
+      );
 
 
-      const data = await res.json();
-
-
-      if (!res.ok || !data.ok) {
+      if (!result.ok) {
         setError(
-          data.error || "ایمیل یا رمز عبور اشتباه است."
+          result.error || "ایمیل یا رمز عبور اشتباه است."
         );
         return;
       }
 
 
-     // ذخیره JWT
-localStorage.setItem("token", data.token);
+      router.push("/account");
 
-// ذخیره کاربر
-localStorage.setItem(
-  "user",
-  JSON.stringify({
-    id: data.user.id,
-    fullName: data.user.fullName,
-    email: data.user.email,
-    phone: data.user.phone || "",
-  })
-);
-console.log(
- "LOGIN SAVED USER:",
- localStorage.getItem("user")
-);
-
-router.push("/account");
 
     } catch (err) {
 
@@ -107,19 +81,13 @@ router.push("/account");
         <div className="relative mx-auto w-full max-w-md">
 
           <motion.div
-
             initial={{ opacity:0, y:24 }}
-
             animate={{ opacity:1, y:0 }}
-
             transition={{
               duration:0.7
             }}
-
             className="glass-strong rounded-sm p-8 md:p-10 border-gold/15"
-
           >
-
 
             <div className="flex items-center gap-3 mb-2">
 
@@ -137,16 +105,12 @@ router.push("/account");
 
 
             <h1 className="font-display text-3xl md:text-4xl text-bone mb-2">
-
               ورود به حساب
-
             </h1>
 
 
             <p className="font-body text-sm text-bone-dim mb-8">
-
               برای پیگیری سفارش‌ها وارد شوید.
-
             </p>
 
 
@@ -156,28 +120,19 @@ router.push("/account");
               className="flex flex-col gap-5"
             >
 
-
               <label className="flex flex-col gap-2">
 
                 <span className="font-body text-xs text-bone-dim">
-
                   ایمیل یا شماره موبایل
-
                 </span>
 
 
                 <input
-
                   value={identifier}
-
                   onChange={(e)=>setIdentifier(e.target.value)}
-
                   className="input-field"
-
                   placeholder="example@email.com یا 0912xxxxxxx"
-
                   dir="ltr"
-
                 />
 
               </label>
@@ -188,26 +143,17 @@ router.push("/account");
               <label className="flex flex-col gap-2">
 
                 <span className="font-body text-xs text-bone-dim">
-
                   رمز عبور
-
                 </span>
 
 
                 <input
-
                   type="password"
-
                   value={password}
-
                   onChange={(e)=>setPassword(e.target.value)}
-
                   className="input-field"
-
                   placeholder="••••••••"
-
                   dir="ltr"
-
                 />
 
               </label>
@@ -218,9 +164,7 @@ router.push("/account");
               {error && (
 
                 <p className="font-body text-xs text-red-400">
-
                   {error}
-
                 </p>
 
               )}
@@ -228,15 +172,10 @@ router.push("/account");
 
 
 
-
               <button
-
                 type="submit"
-
                 disabled={submitting}
-
                 className="w-full flex items-center justify-center gap-2 bg-gold hover:bg-gold-bright disabled:opacity-60 text-ink py-3.5 font-body text-sm font-semibold transition-colors mt-2"
-
               >
 
                 <LogIn size={16}/>
@@ -248,7 +187,6 @@ router.push("/account");
                   :
                   "ورود"
                 }
-
 
               </button>
 
@@ -265,9 +203,7 @@ router.push("/account");
                 href="/register"
                 className="text-gold"
               >
-
                 ثبت‌نام کنید
-
               </Link>
 
             </p>
@@ -282,7 +218,6 @@ router.push("/account");
 
 
       <Footer />
-
 
     </main>
   );
