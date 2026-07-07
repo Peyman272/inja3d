@@ -105,17 +105,17 @@ export default function Footer() {
 
           <div className="flex justify-center items-center gap-8">
             <a
-  referrerPolicy="origin"
-  target="_blank"
-  href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
->
-  <img
-    referrerPolicy="origin"
-    src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
-    alt=""
-    style={{ cursor: "pointer" }}
-  />
-</a>
+               referrerPolicy="origin"
+               target="_blank"
+               href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+            >
+              <img
+              referrerPolicy="origin"
+             src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+             alt=""
+            style={{ cursor: "pointer" }}
+              />
+              </a>
           </div>
         </div>
 
