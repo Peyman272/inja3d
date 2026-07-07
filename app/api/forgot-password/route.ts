@@ -1,47 +1,57 @@
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  try {
-    const { email } = await req.json();
 
-    if (!email) {
-      return NextResponse.json(
-        { ok: false, error: "ایمیل یا شماره لازم است" },
-        { status: 400 }
-      );
-    }
+export async function POST(
+  req:Request
+){
 
-    const baseUrl = process.env.WORDPRESS_URL;
+  try{
 
-    // 🔥 WordPress default reset password endpoint
+
+    const {email}=await req.json();
+
+
+
     const res = await fetch(
-      `${baseUrl}/wp-login.php?action=lostpassword`,
+      `${process.env.WORDPRESS_URL}/wp-json/inja3d/v1/forgot-password`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json"
         },
-        body: new URLSearchParams({
-          user_login: email,
-        }),
+
+        body:JSON.stringify({
+          email
+        })
+
       }
     );
 
-    if (!res.ok) {
-      return NextResponse.json(
-        { ok: false, error: "ارسال ایمیل ناموفق بود" },
-        { status: 500 }
-      );
-    }
 
-    return NextResponse.json({
-      ok: true,
-      message: "لینک بازیابی ارسال شد",
-    });
-  } catch (err: any) {
+
+    const data = await res.json();
+
+
+
+    return NextResponse.json(data);
+
+
+
+  }catch(error){
+
+
     return NextResponse.json(
-      { ok: false, error: err.message || "Server Error" },
-      { status: 500 }
+      {
+        ok:false,
+        message:"خطای سرور"
+      },
+      {
+        status:500
+      }
     );
+
   }
+
 }
