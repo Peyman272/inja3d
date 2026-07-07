@@ -206,10 +206,10 @@ window.dispatchEvent(
   new Event("auth-change")
 );
 
-      console.log(
-        "LOGIN USER SAVED:",
-        userData
-      );
+console.log(
+  "===== AUTH CONTEXT LOGIN SAVED =====",
+  userData
+);
 
 
 
