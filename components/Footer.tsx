@@ -118,3 +118,22 @@ export default function Footer() {
     </footer>
   );
 }
+<div className="mt-16 border-t border-gold/10 pt-10">
+
+  <p className="text-center font-display text-lg text-bone mb-2">
+    اعتماد شما، ارزشمندترین سرمایه‌ی ماست
+  </p>
+
+  <p className="text-center text-sm text-bone-dim mb-8">
+    تمامی پرداخت‌ها از طریق درگاه امن زرین‌پال انجام می‌شود.
+  </p>
+
+  <div className="flex justify-center items-center gap-8">
+
+    <!-- اینماد -->
+
+    <!-- زرین پال -->
+
+  </div>
+
+</div>
