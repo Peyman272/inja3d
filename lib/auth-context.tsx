@@ -73,34 +73,27 @@ export function AuthProvider({
 
   // خواندن کاربر بعد از باز شدن سایت
 
-  useEffect(()=>{
+  useEffect(() => {
+
+  console.log("🔥 AUTH MOUNT");
 
 
-    console.log("🔥 AUTH INIT");
+  setTimeout(()=>{
 
-
-    const savedUser = localStorage.getItem(USER_KEY);
+    const savedUser = localStorage.getItem("user");
 
 
     console.log(
-      "🔥 SAVED USER:",
+      "🔥 DELAY USER:",
       savedUser
     );
 
 
     if(savedUser){
 
-      try{
-
-        setUser(
-          JSON.parse(savedUser)
-        );
-
-      }catch{
-
-        localStorage.removeItem(USER_KEY);
-
-      }
+      setUser(
+        JSON.parse(savedUser)
+      );
 
     }
 
@@ -108,7 +101,10 @@ export function AuthProvider({
     setReady(true);
 
 
-  },[]);
+  },100);
+
+
+},[]);
 
 
 
