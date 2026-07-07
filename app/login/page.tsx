@@ -196,12 +196,12 @@ export default function LoginPage() {
 
 
             <p className="font-body text-sm text-bone-dim text-center mt-8">
-<a
-  href="https://wp.inja3d.ir/wp-login.php?action=lostpassword"
+<Link
+  href="/forgot-password"
   className="text-gold block mb-4"
 >
   رمز عبور را فراموش کرده‌اید؟
-</a>
+</Link>
               هنوز حساب ندارید؟{" "}
 
               <Link
