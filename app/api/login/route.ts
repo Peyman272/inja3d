@@ -4,6 +4,7 @@ export async function POST(req: Request) {
   try {
     const { identifier, password } = await req.json();
 
+
     if (!identifier || !password) {
       return NextResponse.json(
         {
@@ -14,7 +15,9 @@ export async function POST(req: Request) {
       );
     }
 
+
     const baseUrl = process.env.WORDPRESS_URL;
+
 
     if (!baseUrl) {
       return NextResponse.json(
@@ -27,12 +30,15 @@ export async function POST(req: Request) {
     }
 
 
+
     let username = identifier;
     let phone = "";
 
 
+
     // ورود با شماره موبایل
     if (/^09\d{9}$/.test(identifier)) {
+
 
       const consumerKey = process.env.WC_CONSUMER_KEY;
       const consumerSecret = process.env.WC_CONSUMER_SECRET;
@@ -41,6 +47,7 @@ export async function POST(req: Request) {
       const auth = Buffer.from(
         `${consumerKey}:${consumerSecret}`
       ).toString("base64");
+
 
 
       const customerRes = await fetch(
@@ -53,38 +60,49 @@ export async function POST(req: Request) {
       );
 
 
+
       const customers = await customerRes.json();
 
 
+
       if (!customers || customers.length === 0) {
+
         return NextResponse.json(
           {
-            ok: false,
-            error: "کاربری با این شماره موبایل پیدا نشد",
+            ok:false,
+            error:"کاربری با این شماره موبایل پیدا نشد",
           },
-          { status: 404 }
+          {
+            status:404,
+          }
         );
+
       }
 
 
+
       username = customers[0].email;
-      phone = customers[0]?.billing?.phone || "";
+
+      phone =
+        customers[0]?.billing?.phone ||
+        "";
 
     }
 
 
 
-    // دریافت JWT از وردپرس
+
+    // گرفتن JWT از وردپرس
     const loginRes = await fetch(
       `${baseUrl}/wp-json/jwt-auth/v1/token`,
       {
-        method: "POST",
+        method:"POST",
 
-        headers: {
-          "Content-Type": "application/json",
+        headers:{
+          "Content-Type":"application/json",
         },
 
-        body: JSON.stringify({
+        body:JSON.stringify({
           username,
           password,
         }),
@@ -92,53 +110,76 @@ export async function POST(req: Request) {
     );
 
 
+
     const data = await loginRes.json();
 
 
-    console.log("JWT RESPONSE:", data);
+
+    console.log(
+      "JWT RESPONSE:",
+      data
+    );
 
 
 
-    if (!loginRes.ok) {
+    if(!loginRes.ok){
 
       return NextResponse.json(
         {
-          ok: false,
-          error: data.message || "ایمیل یا رمز عبور اشتباه است",
+          ok:false,
+          error:
+            data.message ||
+            "ایمیل یا رمز عبور اشتباه است",
         },
-        { status: 401 }
+        {
+          status:401,
+        }
       );
 
     }
 
 
 
-    // اطلاعات کاربر
-    let fullName = data.user_display_name || username;
 
 
-    // بعضی نسخه‌های JWT این مقدار را ندارند
-    if (data.user_id) {
+    let fullName =
+      data.user_display_name ||
+      username;
 
-      try {
+
+
+    let userId =
+      data.user_id ||
+      data.id ||
+      "";
+
+
+
+
+    // گرفتن اطلاعات کاربر وردپرس
+    if(userId){
+
+      try{
 
         const userRes = await fetch(
-          `${baseUrl}/wp-json/wp/v2/users/${data.user_id}`
+          `${baseUrl}/wp-json/wp/v2/users/${userId}`
         );
 
 
-        if (userRes.ok) {
+        if(userRes.ok){
 
-          const wpUser = await userRes.json();
+          const wpUser =
+            await userRes.json();
 
-          fullName = wpUser.name || fullName;
+
+          fullName =
+            wpUser.name ||
+            fullName;
 
         }
 
-      } catch {
 
-        // اگر گرفتن اطلاعات کاربر شکست خورد،
-        // همان نام JWT استفاده می‌شود
+      }catch{
 
       }
 
@@ -146,39 +187,63 @@ export async function POST(req: Request) {
 
 
 
+
+    const responseUser = {
+
+      id:String(userId),
+
+      fullName,
+
+      email:
+        data.user_email ||
+        username,
+
+      phone,
+
+    };
+
+
+
+    console.log(
+      "FINAL LOGIN USER:",
+      responseUser
+    );
+
+
+
+
     return NextResponse.json(
       {
-        ok: true,
+        ok:true,
 
-        token: data.token,
+        token:data.token,
 
-        user: {
+        user:responseUser,
 
-          id: String(data.user_id || ""),
-
-          fullName,
-
-          email: data.user_email || username,
-
-          phone,
-
-        },
       }
     );
 
 
-  } catch (error: any) {
 
-    console.log("LOGIN ERROR:", error);
+  } catch(error:any){
+
+
+    console.log(
+      "LOGIN ERROR:",
+      error
+    );
 
 
     return NextResponse.json(
       {
-        ok: false,
-        error: error.message || "خطای سرور",
+        ok:false,
+
+        error:
+          error.message ||
+          "خطای سرور",
       },
       {
-        status: 500,
+        status:500,
       }
     );
 
