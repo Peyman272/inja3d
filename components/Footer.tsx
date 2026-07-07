@@ -94,6 +94,32 @@ export default function Footer() {
           ))}
         </div>
 
+        <div className="mt-16 border-t border-gold/10 pt-10">
+          <p className="text-center font-display text-lg text-bone mb-2">
+            اعتماد شما، ارزشمندترین سرمایه‌ی ماست
+          </p>
+
+          <p className="text-center font-body text-sm text-bone-dim mb-8">
+            تمامی پرداخت‌ها از طریق درگاه امن انجام می‌شود.
+          </p>
+
+          <div className="flex justify-center items-center gap-8">
+            <a
+              href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+              target="_blank"
+              rel="noopener noreferrer"
+              referrerPolicy="origin"
+            >
+              <img
+                referrerPolicy="origin"
+                src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+                alt="نماد اعتماد الکترونیکی"
+                className="h-20 w-auto bg-white p-2 rounded-md hover:scale-105 transition-transform"
+              />
+            </a>
+          </div>
+        </div>
+        
         <div className="mt-20 pt-8 border-t border-gold/10 flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="font-body text-xs text-bone-faint">
             © {new Date().getFullYear()} آتلیه‌ی اینجا۳دی. تمامی حقوق محفوظ است.
@@ -118,23 +144,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-<div className="mt-16 border-t border-gold/10 pt-10">
-
-  <p className="text-center font-display text-lg text-bone mb-2">
-    اعتماد شما، ارزشمندترین سرمایه‌ی ماست
-  </p>
-
-  <p className="text-center text-sm text-bone-dim mb-8">
-    تمامی پرداخت‌ها از طریق درگاه امن زرین‌پال انجام می‌شود.
-  </p>
-
-  <div className="flex justify-center items-center gap-8">
-
-    <!-- اینماد -->
-
-    <!-- زرین پال -->
-
-  </div>
-
-</div>
