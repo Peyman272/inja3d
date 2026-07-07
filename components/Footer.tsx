@@ -118,6 +118,7 @@ export default function Footer() {
     </footer>
   );
 }
+
 <div className="mt-16 border-t border-gold/10 pt-10">
 
   <p className="text-center font-display text-lg text-bone mb-2">
