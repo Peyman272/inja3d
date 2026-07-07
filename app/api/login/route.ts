@@ -145,7 +145,7 @@ export async function POST(req: Request) {
 
 
 
- catch(error:any){
+catch(error:any){
 
     console.log("LOGIN ERROR:", error);
 
@@ -159,6 +159,4 @@ export async function POST(req: Request) {
       }
     );
 
-}
-  }
 }
