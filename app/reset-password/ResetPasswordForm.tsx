@@ -70,7 +70,7 @@ export default function ResetPasswordPage() {
 
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json/inja3d/v1/reset-password`,
+        "/api/reset-password",
         {
 
           method:"POST",
