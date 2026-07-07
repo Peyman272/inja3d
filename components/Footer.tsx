@@ -183,24 +183,8 @@ export default function Footer() {
 
 
             {/* زرین پال */}
-
-            <div
-              id="zarinpal"
-              className="flex justify-center"
-            >
-
-              <Script
-                src="https://www.zarinpal.com/webservice/TrustCode"
-                strategy="afterInteractive"
-              />
-
-            </div>
-
-
-          </div>
-
-
-        </div>
+<style>#zarinpal{margin:auto} #zarinpal img {width: 80px;}</style>
+                            <div id="zarinpal"><script src="https://www.zarinpal.com/webservice/TrustCode" type="text/javascript"></script></div></div>
 
 
 
