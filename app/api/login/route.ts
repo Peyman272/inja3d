@@ -17,58 +17,69 @@ export async function POST(req: Request) {
     const baseUrl = process.env.WORDPRESS_URL;
 
     let username = identifier;
+    let phone = "";
 
-    // اگر شماره موبایل وارد شده باشد
+
+    // اگر شماره موبایل وارد شده
     if (/^09\d{9}$/.test(identifier)) {
-      
+
       const consumerKey = process.env.WC_CONSUMER_KEY;
       const consumerSecret = process.env.WC_CONSUMER_SECRET;
+
 
       const auth = Buffer.from(
         `${consumerKey}:${consumerSecret}`
       ).toString("base64");
 
 
-      const customersRes = await fetch(
+      const customerRes = await fetch(
         `${baseUrl}/wp-json/wc/v3/customers?search=${identifier}`,
         {
-          headers: {
-            Authorization: `Basic ${auth}`,
-          },
+          headers:{
+            Authorization:`Basic ${auth}`
+          }
         }
       );
 
-      const customers = await customersRes.json();
+
+      const customers = await customerRes.json();
 
 
       if (!customers.length) {
+
         return NextResponse.json(
           {
-            ok: false,
-            error: "کاربری با این شماره موبایل پیدا نشد",
+            ok:false,
+            error:"کاربری با این شماره پیدا نشد"
           },
-          { status: 404 }
+          {
+            status:404
+          }
         );
+
       }
 
 
       username = customers[0].email;
+      phone = customers[0]?.billing?.phone || "";
+
     }
 
 
-    // گرفتن JWT از وردپرس
+
+    // ورود JWT وردپرس
+
     const loginRes = await fetch(
       `${baseUrl}/wp-json/jwt-auth/v1/token`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
         },
-
-        body: JSON.stringify({
+        body:JSON.stringify({
           username,
-          password,
-        }),
+          password
+        })
       }
     );
 
@@ -76,35 +87,74 @@ export async function POST(req: Request) {
     const data = await loginRes.json();
 
 
-    if (!loginRes.ok) {
+
+    if(!loginRes.ok){
+
       return NextResponse.json(
         {
-          ok: false,
-          error: "ایمیل یا رمز عبور اشتباه است",
+          ok:false,
+          error:"ایمیل یا رمز عبور اشتباه است"
         },
-        { status: 401 }
+        {
+          status:401
+        }
       );
+
     }
 
 
+
+    // گرفتن اطلاعات کامل کاربر
+
+    const userRes = await fetch(
+      `${baseUrl}/wp-json/wp/v2/users/${data.user_id}`,
+      {
+        headers:{
+          Authorization:`Bearer ${data.token}`
+        }
+      }
+    );
+
+
+    const wpUser = await userRes.json();
+
+
+
     return NextResponse.json({
-      ok: true,
-      token: data.token,
-      user: {
-        email: data.user_email,
-        name: data.user_display_name,
-      },
+
+      ok:true,
+
+      token:data.token,
+
+
+      user:{
+
+        id:String(data.user_id),
+
+        fullName:
+          wpUser.name || data.user_display_name,
+
+        email:
+          data.user_email,
+
+        phone
+
+      }
+
     });
 
 
-  } catch (error: any) {
+
+  } catch(error:any){
 
     return NextResponse.json(
       {
-        ok: false,
-        error: error.message || "خطای سرور",
+        ok:false,
+        error:error.message || "خطای سرور"
       },
-      { status: 500 }
+      {
+        status:500
+      }
     );
 
   }
