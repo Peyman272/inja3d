@@ -50,33 +50,31 @@ export function AuthProvider({
 
 useEffect(() => {
 
-  console.log("AUTH CONTEXT MOUNTED");
+  console.log("AUTH PROVIDER START");
 
-  const savedUser = localStorage.getItem("user");
-  const savedToken = localStorage.getItem("token");
-
-  console.log("AUTH LOAD USER:", savedUser);
-  console.log("AUTH LOAD TOKEN:", savedToken);
+  const userStorage = localStorage.getItem("user");
+  const tokenStorage = localStorage.getItem("token");
 
 
-  if (savedUser && savedToken) {
+  console.log("USER FROM STORAGE:", userStorage);
+  console.log("TOKEN FROM STORAGE:", tokenStorage);
 
-    try {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
 
-    } catch (error) {
+  if (userStorage) {
 
-      console.log("USER PARSE ERROR:", error);
+    const parsed = JSON.parse(userStorage);
 
-    }
+    console.log("SETTING USER:", parsed);
+
+    setUser(parsed);
 
   }
 
+
   setReady(true);
 
-}, []);
 
+}, []);
 
   async function login(
     identifier:string,
