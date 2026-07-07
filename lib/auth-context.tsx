@@ -142,8 +142,9 @@ export function AuthProvider({
 
 
 
-      const data = await res.json();
+     const data = await res.json();
 
+console.log("LOGIN API DATA:", data);
 
 
       if(!res.ok || !data.ok){
