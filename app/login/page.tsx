@@ -196,7 +196,12 @@ export default function LoginPage() {
 
 
             <p className="font-body text-sm text-bone-dim text-center mt-8">
-
+<Link
+  href="/forgot-password"
+  className="text-gold block mb-4"
+>
+  رمز عبور را فراموش کرده‌اید؟
+</Link>
               هنوز حساب ندارید؟{" "}
 
               <Link
