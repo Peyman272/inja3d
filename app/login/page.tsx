@@ -58,21 +58,22 @@ export default function LoginPage() {
       }
 
 
-      // ذخیره JWT
-      localStorage.setItem(
-        "token",
-        data.token
-      );
+     // ذخیره JWT
+localStorage.setItem("token", data.token);
+
+// ذخیره کاربر
+localStorage.setItem(
+  "user",
+  JSON.stringify({
+    id: data.user.id,
+    fullName: data.user.fullName,
+    email: data.user.email,
+    phone: data.user.phone || "",
+  })
+);
 
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
-
-
-      router.push("/account");
-
+router.push("/account");
 
     } catch (err) {
 
