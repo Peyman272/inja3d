@@ -44,6 +44,8 @@ export function AuthProvider({
   children: ReactNode;
 }) {
 
+  console.log("🔥 AUTH PROVIDER FILE LOADED");
+
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
 
