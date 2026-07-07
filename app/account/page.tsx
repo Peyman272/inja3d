@@ -20,6 +20,8 @@ export default function AccountPage() {
   const router = useRouter();
   const { user, ready, logout } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
+console.log("ACCOUNT USER:", user);
+console.log("ACCOUNT READY:", ready);
 
   useEffect(() => {
     if (ready && !user) {
