@@ -99,10 +99,17 @@ export default function ResetPasswordPage() {
 console.log("RESET RESPONSE:", data);
 
 if(!data.ok){
+  console.log(
+    "RESET ERROR DETAIL:",
+    JSON.stringify(data, null, 2)
+  );
+
   setError(
     data.message ||
+    data.error?.message ||
     "خطا در تغییر رمز"
   );
+
   return;
 }
 
