@@ -111,7 +111,7 @@ export default function Footer() {
               referrerPolicy="origin"
             >
               <img
-                src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+                src="https://Trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
                 alt="نماد اعتماد الکترونیکی"
                 width="120"
                 height="120"
