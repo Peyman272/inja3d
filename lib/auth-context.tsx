@@ -161,8 +161,9 @@ export function AuthProvider({
       }
 
 
+console.log("DATA.USER FROM API:", data.user);
 
-      const userData:User = {
+const userData:User = {
 
 
         id:
