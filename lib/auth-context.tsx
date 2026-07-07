@@ -8,151 +8,244 @@ import {
   ReactNode,
 } from "react";
 
+
 type User = {
-  id:string;
-  fullName:string;
-  email:string;
-  phone:string;
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
 };
 
+
 type AuthContextValue = {
+
   user: User | null;
+
   ready: boolean;
+
+  login: (
+    identifier: string,
+    password: string
+  ) => Promise<{
+    ok: boolean;
+    error?: string;
+  }>;
+
 
   register: (
     fullName: string,
     email: string,
     phone: string,
     password: string
-  ) => Promise<{ ok: boolean; error?: string }>;
+  ) => Promise<{
+    ok:boolean;
+    error?:string;
+  }>;
 
-  login: (
-    identifier: string,
-    password: string
-  ) => Promise<{ ok: boolean; error?: string }>;
 
-  logout: () => void;
+  logout:()=>void;
+
 };
+
 
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 
+
+const USER_KEY = "user";
+const TOKEN_KEY = "token";
+
+
+
 export function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
-
-  console.log("🔥 AUTH PROVIDER FILE LOADED");
-
-  const [user, setUser] = useState<User | null>(null);
-  const [ready, setReady] = useState(false);
+  children
+}:{
+  children:ReactNode
+}){
 
 
-useEffect(() => {
+  const [user,setUser] = useState<User | null>(null);
 
-  console.log("🔥 AUTH USE EFFECT RUN");
-
-
-  const savedUser = localStorage.getItem("user");
-  const savedToken = localStorage.getItem("token");
+  const [ready,setReady] = useState(false);
 
 
-  console.log("🔥 AUTH LOCAL USER:", savedUser);
-  console.log("🔥 AUTH LOCAL TOKEN:", savedToken);
+
+  // خواندن کاربر بعد از باز شدن سایت
+
+  useEffect(()=>{
 
 
-  if (savedUser) {
+    console.log("🔥 AUTH INIT");
 
-    try {
 
-      setUser(JSON.parse(savedUser));
+    const savedUser = localStorage.getItem(USER_KEY);
 
-    } catch (error) {
 
-      console.log("USER PARSE ERROR:", error);
+    console.log(
+      "🔥 SAVED USER:",
+      savedUser
+    );
+
+
+    if(savedUser){
+
+      try{
+
+        setUser(
+          JSON.parse(savedUser)
+        );
+
+      }catch{
+
+        localStorage.removeItem(USER_KEY);
+
+      }
 
     }
 
-  }
+
+    setReady(true);
 
 
-  setReady(true);
+  },[]);
 
 
-}, []);
-  
+
+
+
   async function login(
     identifier:string,
     password:string
   ){
 
+
     try{
 
-      const res = await fetch("/api/login",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          identifier,
-          password
-        })
-      });
+
+      const res = await fetch(
+        "/api/login",
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+          body:JSON.stringify({
+
+            identifier,
+
+            password
+
+          })
+
+        }
+      );
+
 
 
       const data = await res.json();
 
 
+
       if(!res.ok || !data.ok){
 
         return {
+
           ok:false,
+
           error:data.error || "ورود ناموفق بود"
+
         };
 
       }
 
 
+
       const userData:User = {
-        id:data.user?.id || "",
-        fullName:data.user?.fullName || "",
-        email:data.user?.email || "",
-        phone:data.user?.phone || "",
+
+
+        id:
+          data.user.id || "",
+
+
+        fullName:
+          data.user.fullName ||
+          data.user.name ||
+          "",
+
+
+        email:
+          data.user.email ||
+          data.user_email ||
+          "",
+
+
+        phone:
+          data.user.phone ||
+          ""
+
       };
 
 
+
+
       localStorage.setItem(
-        "token",
+        TOKEN_KEY,
         data.token
       );
 
 
+
       localStorage.setItem(
-        "user",
+        USER_KEY,
         JSON.stringify(userData)
       );
+
+
+
+      console.log(
+        "LOGIN USER SAVED:",
+        userData
+      );
+
 
 
       setUser(userData);
 
 
+
       return {
+
         ok:true
+
       };
 
 
-    }catch(error){
+
+    }catch(error:any){
+
 
       return {
+
         ok:false,
-        error:"خطا در اتصال به سرور"
+
+        error:
+          error.message ||
+          "خطای اتصال"
+
       };
+
 
     }
 
+
   }
+
+
+
 
 
 
@@ -163,98 +256,157 @@ useEffect(() => {
     password:string
   ){
 
+
     try{
 
-      const res = await fetch("/api/register",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          fullName,
-          email,
-          phone,
-          password
-        })
-      });
+
+      const res = await fetch(
+        "/api/register",
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+
+          body:JSON.stringify({
+
+            fullName,
+
+            email,
+
+            phone,
+
+            password
+
+          })
+
+        }
+      );
+
 
 
       const data = await res.json();
 
 
+
       if(!res.ok || !data.ok){
 
         return {
+
           ok:false,
-          error:data.error || "ثبت نام ناموفق بود"
+
+          error:
+          data.error ||
+          "ثبت نام ناموفق بود"
+
         };
 
       }
 
 
+
       return {
+
         ok:true
+
       };
+
 
 
     }catch{
 
+
       return {
+
         ok:false,
-        error:"خطا در اتصال"
+
+        error:"خطای اتصال"
+
       };
+
 
     }
 
+
   }
+
+
 
 
 
 
   function logout(){
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+
+    localStorage.removeItem(USER_KEY);
+
+    localStorage.removeItem(TOKEN_KEY);
+
 
     setUser(null);
 
+
   }
+
+
 
 
 
   return (
 
     <AuthContext.Provider
+
       value={{
+
         user,
+
         ready,
+
         login,
+
         register,
+
         logout
+
       }}
+
     >
 
       {children}
+
 
     </AuthContext.Provider>
 
   );
 
+
 }
+
+
 
 
 
 export function useAuth(){
 
-  const ctx = useContext(AuthContext);
 
-  if(!ctx){
+  const context =
+    useContext(AuthContext);
+
+
+
+  if(!context){
+
     throw new Error(
-      "useAuth باید داخل AuthProvider استفاده شود"
+      "useAuth باید داخل AuthProvider باشد"
     );
+
   }
 
 
-  return ctx;
+  return context;
+
 
 }
