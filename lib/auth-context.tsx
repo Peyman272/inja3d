@@ -200,7 +200,9 @@ export function AuthProvider({
         JSON.stringify(userData)
       );
 
-
+window.dispatchEvent(
+  new Event("auth-change")
+);
 
       console.log(
         "LOGIN USER SAVED:",
