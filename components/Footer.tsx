@@ -119,7 +119,8 @@ export default function Footer() {
             </a>
           </div>
         </div>
-        
+<a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB' alt='' style='cursor:pointer' code='vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB'></a>
+     
         <div className="mt-20 pt-8 border-t border-gold/10 flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="font-body text-xs text-bone-faint">
             © {new Date().getFullYear()} آتلیه‌ی اینجا۳دی. تمامی حقوق محفوظ است.
