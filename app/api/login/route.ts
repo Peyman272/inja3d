@@ -145,7 +145,9 @@ export async function POST(req: Request) {
 
 
 
-  } catch(error:any){
+ catch(error:any){
+
+    console.log("LOGIN ERROR:", error);
 
     return NextResponse.json(
       {
@@ -157,5 +159,6 @@ export async function POST(req: Request) {
       }
     );
 
+}
   }
 }
