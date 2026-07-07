@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { motion } from "framer-motion";
 import { Instagram, Youtube, Twitter } from "lucide-react";
 
@@ -36,16 +37,21 @@ const columns = [
   },
 ];
 
+
 export default function Footer() {
+
   return (
+
     <footer className="relative pt-24 pb-10 px-6 border-t border-gold/10 bg-ink">
 
       <div className="absolute inset-x-0 top-0 hairline" />
+
 
       <div className="mx-auto max-w-7xl">
 
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-12">
+
 
           <div>
 
@@ -58,16 +64,16 @@ export default function Footer() {
 
 
             <p className="font-body text-bone-dim text-sm mt-5 max-w-sm leading-relaxed">
-              مجسمه‌های کلکسیونی در سطح موزه‌ای، تراش‌خورده از دنیایی که دوستش دارید.
-              پرداخت‌شده با دست، شماره‌گذاری فردی، ساخته‌شده برای ماندن.
+              مجسمه‌های کلکسیونی در سطح موزه‌ای، ساخته‌شده برای ماندن.
+              پرداخت‌شده با دست و تولید شده با عشق به جزئیات.
             </p>
 
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              initial={{opacity:0,y:20}}
+              whileInView={{opacity:1,y:0}}
+              viewport={{once:true}}
+              transition={{duration:0.6}}
               className="mt-8"
             >
 
@@ -81,13 +87,13 @@ export default function Footer() {
                 <input
                   type="email"
                   placeholder="ایمیل شما"
-                  className="bg-transparent flex-1 py-3 font-body text-sm text-bone outline-none"
+                  className="bg-transparent flex-1 py-3 text-sm text-bone outline-none"
                 />
 
 
                 <button
                   type="submit"
-                  className="font-body text-xs text-gold px-2"
+                  className="text-xs text-gold px-2"
                 >
                   عضویت
                 </button>
@@ -117,7 +123,7 @@ export default function Footer() {
 
                     <Link
                       href={l.href}
-                      className="font-body text-sm text-bone-dim hover:text-gold transition-colors"
+                      className="font-body text-sm text-bone-dim hover:text-gold"
                     >
                       {l.label}
                     </Link>
@@ -133,12 +139,12 @@ export default function Footer() {
           ))}
 
 
+
         </div>
 
 
 
-
-        {/* اعتماد و پرداخت */}
+        {/* بخش اعتماد */}
 
         <div className="mt-16 border-t border-gold/10 pt-10">
 
@@ -157,7 +163,7 @@ export default function Footer() {
           <div className="flex justify-center items-center gap-8">
 
 
-            {/* اینماد - کد اصلی */}
+            {/* اینماد */}
 
             <a
               referrerPolicy="origin"
@@ -168,21 +174,33 @@ export default function Footer() {
               <img
                 referrerPolicy="origin"
                 src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
-                alt=""
-                style={{
-                  cursor:"pointer"
-                }}
+                alt="نماد اعتماد"
+                className="h-20 w-auto bg-white rounded-md p-2"
               />
 
             </a>
+
+
+
+            {/* زرین پال */}
+
+            <div
+              id="zarinpal"
+              className="flex justify-center"
+            >
+
+              <Script
+                src="https://www.zarinpal.com/webservice/TrustCode"
+                strategy="afterInteractive"
+              />
+
+            </div>
 
 
           </div>
 
 
         </div>
-
-
 
 
 
@@ -198,9 +216,9 @@ export default function Footer() {
 
           <div className="flex items-center gap-5">
 
-            <Instagram size={16} />
-            <Youtube size={16} />
-            <Twitter size={16} />
+            <Instagram size={16}/>
+            <Youtube size={16}/>
+            <Twitter size={16}/>
 
           </div>
 
@@ -210,7 +228,7 @@ export default function Footer() {
 
             <Link
               href="/contact"
-              className="font-body text-xs text-bone-faint"
+              className="text-xs text-bone-faint"
             >
               حریم خصوصی
             </Link>
@@ -218,7 +236,7 @@ export default function Footer() {
 
             <Link
               href="/contact"
-              className="font-body text-xs text-bone-faint"
+              className="text-xs text-bone-faint"
             >
               قوانین
             </Link>
@@ -233,5 +251,7 @@ export default function Footer() {
 
 
     </footer>
+
   );
+
 }
