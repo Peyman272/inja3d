@@ -9,10 +9,10 @@ import {
 } from "react";
 
 type User = {
-  id?: string;
-  fullName?: string;
-  email: string;
-  phone?: string;
+  id:string;
+  fullName:string;
+  email:string;
+  phone:string;
 };
 
 type AuthContextValue = {
