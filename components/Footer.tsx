@@ -118,16 +118,3 @@ export default function Footer() {
     </footer>
   );
 }
-<a
-  referrerPolicy="origin"
-  target="_blank"
-  rel="noopener noreferrer"
-  href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
->
-  <img
-    referrerPolicy="origin"
-    src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
-    alt="نماد اعتماد الکترونیکی"
-    style={{ cursor: "pointer" }}
-  />
-</a>
