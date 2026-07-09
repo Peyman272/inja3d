@@ -14,6 +14,15 @@ export type ProductSpec = {
   value: string;
 };
 
+export type ProductVariation = {
+  id: string;
+  price: number;
+  attributes: {
+    name: string;
+    option: string;
+  }[];
+};
+
 export type Product = {
   id: string;
   slug: string;
