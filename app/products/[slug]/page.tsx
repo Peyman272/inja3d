@@ -191,7 +191,7 @@ export default function ProductDetailPage() {
                 <span className="font-display text-3xl text-gradient-gold">
                     {formatToman(
                      selectedVariation
-                     selectedVariation.price
+                     ? selectedVariation.price
                       : product.price
                        )}
                        </span>
