@@ -30,7 +30,8 @@ export default function ProductDetailPage() {
   const [notFoundFlag, setNotFoundFlag] = useState(false);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<Tab>("description");
-
+  const [selectedVariation, setSelectedVariation] = useState<any>(null);
+  
   useEffect(() => {
     let cancelled = false;
 
