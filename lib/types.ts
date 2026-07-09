@@ -27,22 +27,35 @@ export type Product = {
   id: string;
   slug: string;
   name: string;
+
+  // پشتیبانی از محصولات ساده و متغیر ووکامرس
+  type?: "simple" | "variable";
+  variations?: ProductVariation[];
+
   series: string;
   category: ProductCategory;
   categoryId?: number;
+
   price: number; // به تومان
   compareAtPrice?: number;
+
   editionSize: number;
   editionLeft: number;
+
   scale: string;
   sku: string;
+
   rating: number;
   reviewCount: number;
+
   shortDescription: string;
   description: string[];
+
   specs: ProductSpec[];
+
   image?: string;
   images?: string[];
+
   featured?: boolean;
   isNew?: boolean;
 };
