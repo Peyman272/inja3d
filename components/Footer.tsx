@@ -118,7 +118,6 @@ export default function Footer() {
     </footer>
   );
 }
-
 <a
   referrerPolicy="origin"
   target="_blank"
