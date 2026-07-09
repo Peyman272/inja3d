@@ -10,24 +10,45 @@ export async function GET(
       slug: params.slug,
       status: "publish",
     });
+
     const product = Array.isArray(data) ? data[0] : undefined;
-let variations = [];
 
-if (product?.type === "variable") {
-  const { data: vars } = await wcFetch(
-    `/products/${product.id}/variations`
-  );
-
-  variations = vars;
-}
     if (!product) {
-      return NextResponse.json({ error: "محصول یافت نشد" }, { status: 404 });
+      return NextResponse.json(
+        { error: "محصول یافت نشد" },
+        { status: 404 }
+      );
     }
+
+    let variations: any[] = [];
+
+    if (product.type === "variable") {
+      const { data: vars } = await wcFetch(
+        `/products/${product.id}/variations`
+      );
+
+      variations = Array.isArray(vars) ? vars : [];
+    }
+
+    console.log("PRODUCT TYPE:", product.type);
+    console.log("VARIATIONS COUNT:", variations.length);
+    console.log("VARIATIONS DATA:", variations);
+
     return NextResponse.json({
-  ...product,
-  variations,
-});
+      ...product,
+      variations,
+    });
+
   } catch (err: any) {
-    return NextResponse.json({ error: err.message ?? "خطای ناشناخته" }, { status: 500 });
+    console.log("PRODUCT API ERROR:", err);
+
+    return NextResponse.json(
+      {
+        error: err.message ?? "خطای ناشناخته",
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }
