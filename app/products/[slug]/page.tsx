@@ -160,7 +160,7 @@ export default function ProductDetailPage() {
           key={v.id}
           className="border border-gold/30 px-4 py-2 text-sm text-bone hover:border-gold"
         >
-          {v.attributes?.[0]?.option || v.name}
+          {v.attributes?.[0]?.option || `مدل ${v.id}`}
         </button>
       ))}
     </div>
