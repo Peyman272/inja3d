@@ -210,6 +210,17 @@ export default function ProductDetailPage() {
                        </span>
               </div>
 
+<div className="mb-8 border border-gold/20 bg-gold/5 p-4">
+  <p className="font-body text-sm text-bone leading-relaxed">
+    ⏳ زمان آماده‌سازی:
+    <span className="text-gold font-semibold">
+      {" "}۱۴ تا ۲۵ روز کاری
+    </span>
+    <br />
+    این محصول پس از ثبت سفارش وارد مرحله چاپ سه‌بعدی، آماده‌سازی و رنگ‌آمیزی دستی می‌شود.
+  </p>
+</div>
+              
               {product.shortDescription && (
                 <p className="font-body text-bone-dim text-sm leading-relaxed mb-8 max-w-lg">
                   {product.shortDescription}
