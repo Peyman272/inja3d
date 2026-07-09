@@ -221,12 +221,14 @@ export default function ProductDetailPage() {
                   <p className="font-body text-[11px] text-bone-faint mb-1">مقیاس</p>
                   <p className="font-body text-sm text-bone">{product.scale}</p>
                 </div>
-                <div>
-                  <p className="font-body text-[11px] text-bone-faint mb-1">موجودی</p>
-                  <p className="font-body text-sm text-bone">
-                    {toPersianDigits(product.editionLeft)} عدد
-                  </p>
-                </div>
+               <div>
+  <p className="font-body text-[11px] text-bone-faint mb-1">
+    وضعیت سفارش
+  </p>
+  <p className="font-body text-sm text-bone">
+    تماس بگیرید
+  </p>
+</div>
                 <div>
                   <p className="font-body text-[11px] text-bone-faint mb-1">کد محصول</p>
                   <p className="font-body text-sm text-bone">{product.sku || "—"}</p>
