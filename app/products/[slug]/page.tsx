@@ -157,12 +157,17 @@ export default function ProductDetailPage() {
 
     <div className="flex gap-3 flex-wrap">
       {product.variations.map((v) => (
-        <button
-          key={v.id}
-          className="border border-gold/30 px-4 py-2 text-sm text-bone hover:border-gold"
-        >
-          {v.attributes?.[0]?.option || `مدل ${v.id}`}
-        </button>
+       <button
+        key={v.id}
+        onClick={() => setSelectedVariation(v)}
+        className={`border px-4 py-2 text-sm transition-colors ${
+        selectedVariation?.id === v.id
+          ? "border-gold text-gold"
+           : "border-gold/30 text-bone hover:border-gold"
+          }`}
+>
+  {v.attributes?.[0]?.option || `مدل ${v.id}`}
+</button>
       ))}
     </div>
   </div>
