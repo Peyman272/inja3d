@@ -91,9 +91,22 @@ export default function ProductDetailPage() {
   const lowStock = product.editionLeft > 0 && product.editionLeft <= product.editionSize * 0.2;
 
   function handleAdd() {
-    addItem(product!, qty);
-    showToast(`${toPersianDigits(qty)} عدد از «${product!.name}» به سبد خرید افزوده شد`);
-  }
+  const cartProduct = {
+    ...product!,
+    price: selectedVariation
+      ? selectedVariation.price
+      : product!.price,
+    name: selectedVariation
+      ? `${product!.name} - ${selectedVariation.name}`
+      : product!.name,
+  };
+
+  addItem(cartProduct, qty);
+
+  showToast(
+    `${toPersianDigits(qty)} عدد از «${cartProduct.name}» به سبد خرید افزوده شد`
+  );
+}
 
   return (
     <main className="relative">
