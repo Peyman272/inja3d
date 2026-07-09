@@ -148,6 +148,25 @@ export default function ProductDetailPage() {
                 {product.name}
               </h1>
 
+{product.variations && product.variations.length > 0 && (
+  <div className="mb-6">
+    <p className="font-body text-sm text-bone-dim mb-3">
+      انتخاب سایز:
+    </p>
+
+    <div className="flex gap-3 flex-wrap">
+      {product.variations.map((v) => (
+        <button
+          key={v.id}
+          className="border border-gold/30 px-4 py-2 text-sm text-bone hover:border-gold"
+        >
+          {v.attributes?.[0]?.option || v.name}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+              
               {product.reviewCount > 0 && (
                 <div className="flex items-center gap-3 mb-6">
                   <StarRating rating={product.rating} showValue />
