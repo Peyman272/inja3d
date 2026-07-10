@@ -106,28 +106,35 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-6">
-            <Link href="/contact" className="font-body text-xs text-bone-faint hover:text-gold transition-colors">
-              حریم خصوصی
-            </Link>
-            <Link href="/contact" className="font-body text-xs text-bone-faint hover:text-gold transition-colors">
-              قوانین
-            </Link>
-          </div>
-          <div className="flex items-center">
-  <a
-    referrerPolicy="origin"
-    target="_blank"
-    rel="noopener noreferrer"
-    href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
-  >
-    <img
-      referrerPolicy="origin"
-      src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
-      alt="نماد اعتماد الکترونیکی"
-      style={{ cursor: "pointer" }}
-      className="w-20 h-auto"
-    />
-  </a>
+
+  <Link href="/contact" className="font-body text-xs text-bone-faint hover:text-gold transition-colors">
+    حریم خصوصی
+  </Link>
+
+  <Link href="/contact" className="font-body text-xs text-bone-faint hover:text-gold transition-colors">
+    قوانین
+  </Link>
+
+  <div
+    className="enamad"
+    dangerouslySetInnerHTML={{
+      __html: `
+      <a 
+        referrerpolicy="origin" 
+        target="_blank" 
+        href="https://trustseal.enamad.ir/?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+      >
+        <img 
+          referrerpolicy="origin" 
+          src="https://trustseal.enamad.ir/logo.aspx?id=681531&Code=vpI0reLsAB6FLR2pk1txrNCv7o6uK6IB"
+          alt="اینماد"
+          style="cursor:pointer"
+        />
+      </a>
+      `,
+    }}
+  />
+
 </div>
         </div>
       </div>
