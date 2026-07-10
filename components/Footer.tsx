@@ -135,6 +135,24 @@ export default function Footer() {
     }}
   />
 
+<div
+  id="zarinpal"
+  className="flex justify-center items-center"
+  dangerouslySetInnerHTML={{
+    __html: `
+      <style>
+        #zarinpal img {
+          width: 80px;
+        }
+      </style>
+      <script 
+        src="https://www.zarinpal.com/webservice/TrustCode" 
+        type="text/javascript">
+      </script>
+    `,
+  }}
+/>
+            
 </div>
         </div>
       </div>
