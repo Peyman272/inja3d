@@ -208,8 +208,9 @@ function scrollCategories(direction: "left" | "right") {
   className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-charcoal border border-gold/30 text-gold flex items-center justify-center"
 >
   <ChevronLeft size={18} />
-</button>
+     </button>
           </div>
+        </div>
       </section>
 
       {/* شبکه محصولات */}
