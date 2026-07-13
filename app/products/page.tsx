@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState, Suspense } from "react";
+import { useEffect, useMemo, useState, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { adaptProduct, adaptCategory } from "@/lib/adaptProduct";
 import { Product, Category } from "@/lib/types";
 
@@ -24,6 +25,16 @@ function ProductsPageContent() {
   );
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const categoryRef = useRef<HTMLDivElement>(null);
+
+function scrollCategories(direction: "left" | "right") {
+  if (!categoryRef.current) return;
+
+  categoryRef.current.scrollBy({
+    left: direction === "left" ? -250 : 250,
+    behavior: "smooth",
+  });
+}
 
   /* دسته‌بندی‌ها مستقل از محصولات گرفته می‌شوند — همیشه کامل هستند،
      حتی اگر صفحه‌ی فعلیِ محصولات همه‌ی دسته‌ها را نداشته باشد */
@@ -95,13 +106,24 @@ function ProductsPageContent() {
           />
 
           {/* دسته‌بندی‌ها — دایره‌ای، با موشن */}
-          <motion.div
-            initial="hidden"
-            animate="show"
-            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } } }}
-            className="flex gap-4 mt-8 overflow-x-auto pb-2"
-            style={{ scrollbarWidth: "none" }}
-          >
+          <div className="relative mt-8">
+
+<button
+  onClick={() => scrollCategories("right")}
+  className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-charcoal border border-gold/30 text-gold flex items-center justify-center"
+>
+  <ChevronRight size={18} />
+</button>
+
+
+<motion.div
+  ref={categoryRef}
+  initial="hidden"
+  animate="show"
+  variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } } }}
+  className="flex gap-4 overflow-x-auto pb-2 px-12"
+  style={{ scrollbarWidth: "none" }}
+>
             {/* دکمه‌ی همه */}
             <motion.button
               onClick={() => setActiveId("all")}
@@ -181,7 +203,13 @@ function ProductsPageContent() {
               );
             })}
           </motion.div>
-        </div>
+     <button
+  onClick={() => scrollCategories("left")}
+  className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-charcoal border border-gold/30 text-gold flex items-center justify-center"
+>
+  <ChevronLeft size={18} />
+</button>
+          </div>
       </section>
 
       {/* شبکه محصولات */}
