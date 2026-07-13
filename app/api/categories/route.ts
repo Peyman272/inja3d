@@ -10,12 +10,18 @@ export async function GET() {
       order: "asc",
     });
 
+    console.log("CATEGORIES DATA:", data);
+
     return NextResponse.json(data);
 
   } catch (err: any) {
     return NextResponse.json(
-      { error: err.message ?? "خطای ناشناخته" },
-      { status: 500 }
+      {
+        error: err.message ?? "خطای ناشناخته",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }
