@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const { data } = await wcFetch("/products/categories", {
       per_page: 100,
-      hide_empty: false,
+      hide_empty: "false",
       orderby: "name",
       order: "asc",
     });
