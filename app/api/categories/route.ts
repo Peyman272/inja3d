@@ -3,16 +3,16 @@ import { wcFetch } from "@/lib/woocommerce";
 
 export async function GET() {
   try {
-    const { data } = await wcFetch("/products/categories", {
+    const response = await wcFetch("/products/categories", {
       per_page: 100,
       hide_empty: "false",
       orderby: "name",
       order: "asc",
     });
 
-    console.log("CATEGORIES DATA:", data);
+    console.log("FULL CATEGORY RESPONSE:", response);
 
-    return NextResponse.json(data);
+    return NextResponse.json(response.data);
 
   } catch (err: any) {
     return NextResponse.json(
