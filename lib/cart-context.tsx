@@ -55,18 +55,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
         );
       }
       return [
-        ...prev,
-        {
-          productId: product.id,
-          slug: product.slug,
-          name: product.name,
-          series: product.series,
-          category: product.category,
-          price: product.price,
-          scale: product.scale,
-          qty,
-        },
-      ];
+  ...prev,
+  {
+    productId: product.id,
+    slug: product.slug,
+    name: product.name,
+    series: product.series,
+    category: product.category,
+    price: product.price,
+    scale: product.scale,
+    image: product.image,
+    qty,
+  },
+];
     });
   }
 
