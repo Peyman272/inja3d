@@ -47,7 +47,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, hydrated]);
 
   function addItem(product: Product, qty = 1) {
-    setItems((prev) => {
+
+  console.log("PRODUCT IN CART:", product);
+
+  setItems((prev) => {
       const existing = prev.find((i) => i.productId === product.id);
       if (existing) {
         return prev.map((i) =>
