@@ -68,7 +68,7 @@ export type ProductReview = {
   comment: string;
 };
 
-export type CartItem = {
+export type CartItem = {export type CartItem = {
   productId: string;
   slug: string;
   name: string;
@@ -76,6 +76,7 @@ export type CartItem = {
   category: ProductCategory;
   price: number;
   scale: string;
+  image?: string;
   qty: number;
 };
 
