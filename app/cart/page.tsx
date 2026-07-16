@@ -65,11 +65,19 @@ export default function CartPage() {
                     className="glass rounded-sm p-4 md:p-5 flex items-center gap-4 md:gap-6 border-gold/10"
                   >
                     <Link
-                      href={`/products/${item.slug}`}
-                      className="shrink-0 w-20 h-24 md:w-24 md:h-28 bg-gradient-to-b from-charcoal-high to-charcoal rounded-sm overflow-hidden"
-                    >
-                      <ProductVisual category={item.category} className="h-full scale-90" />
-                    </Link>
+  href={`/products/${item.slug}`}
+  className="shrink-0 w-20 h-24 md:w-24 md:h-28 bg-gradient-to-b from-charcoal-high to-charcoal rounded-sm overflow-hidden"
+>
+  {item.image ? (
+    <img
+      src={item.image}
+      alt={item.name}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <ProductVisual category={item.category} className="h-full scale-90" />
+  )}
+</Link>
 
                     <div className="flex-1 min-w-0">
                       <p className="eyebrow mb-1">{item.series}</p>
