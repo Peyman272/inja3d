@@ -141,20 +141,26 @@ export default function AccountPage() {
                         </span>
                         <span className="font-body text-xs text-bone-faint">
                           {paymentLabel[order.paymentMethod]}
-                        </span>
-                      </div>
-                      <p className="font-body text-xs text-bone-faint">
-{toPersianDigits(
-  String(order.items.reduce((s, i) => s + i.qty, 0))
-)} قلم کالا                        {" · "}
-                        ارسال به {order.address.city}، {order.address.province}
-                      </p>
-                      <div className="flex items-center justify-between pt-3 border-t border-gold/10">
-                        <span className="font-body text-xs text-bone-dim">مبلغ کل</span>
-                        <span className="font-display text-lg text-gradient-gold">
-                          {formatToman(order.total)}
-                        </span>
-                      </div>
+</span>
+</div>
+
+<p className="font-body text-xs text-bone-faint">
+  {toPersianDigits(
+    order.items.reduce((sum, item) => sum + item.qty, 0)
+  )} قلم کالا
+  {" · "}
+  ارسال به {order.address.city}، {order.address.province}
+</p>
+
+<div className="flex items-center justify-between pt-3 border-t border-gold/10">
+  <span className="font-body text-xs text-bone-dim">
+    مبلغ کل
+  </span>
+
+  <span className="font-display text-lg text-gradient-gold">
+    {formatToman(order.total)}
+  </span>
+</div>
                     </div>
                   ))}
                 </div>
