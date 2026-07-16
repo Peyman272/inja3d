@@ -144,8 +144,9 @@ export default function AccountPage() {
                         </span>
                       </div>
                       <p className="font-body text-xs text-bone-faint">
-                        {toPersianDigits(order.items.reduce((s, i) => s + i.qty, 0))} قلم کالا
-                        {" · "}
+{toPersianDigits(
+  String(order.items.reduce((s, i) => s + i.qty, 0))
+)} قلم کالا                        {" · "}
                         ارسال به {order.address.city}، {order.address.province}
                       </p>
                       <div className="flex items-center justify-between pt-3 border-t border-gold/10">
