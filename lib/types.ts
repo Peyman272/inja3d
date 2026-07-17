@@ -28,6 +28,9 @@ export type Product = {
   slug: string;
   name: string;
 
+  dateCreated?: string;
+  dateUpdated?: string;
+  
   // پشتیبانی از محصولات ساده و متغیر ووکامرس
   type?: "simple" | "variable";
   variations?: ProductVariation[];
