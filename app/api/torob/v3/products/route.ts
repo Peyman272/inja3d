@@ -6,7 +6,6 @@ import { mapProductToTorob } from "@/lib/torob/mapper";
 import { createTorobResponse } from "@/lib/torob/response";
 
 
-// تست ساده با مرورگر
 export async function GET() {
   return NextResponse.json({
     status: "Torob API is alive",
@@ -15,10 +14,7 @@ export async function GET() {
 }
 
 
-// API اصلی ترب
-export async function POST(
-  req: NextRequest
-) {
+export async function POST(req: NextRequest) {
 
   try {
 
@@ -30,31 +26,100 @@ export async function POST(
       sort,
       page_urls,
       page_uniques,
-
     } = body;
 
 
     /*
-      حالت دریافت لیست محصولات
-      ترب باید page و sort بفرستد
+      دریافت چند محصول با URL
     */
 
-    if (page !== undefined) {
+    if (Array.isArray(page_urls)) {
 
-
-      if (!sort) {
-
-        return NextResponse.json(
+      const result =
+        await wcFetch<any[]>(
+          "/products",
           {
-            error:
-              "sort parameter is not provided",
-          },
-          {
-            status: 400,
+            per_page:100,
           }
         );
 
-      }
+
+      const products =
+        result.data
+        .filter(item =>
+          page_urls.includes(
+            `${process.env.NEXT_PUBLIC_SITE_URL}/products/${item.slug}`
+          )
+        )
+        .map(item =>
+          mapProductToTorob(
+            adaptProduct(item)
+          )
+        );
+
+
+      return NextResponse.json(
+        createTorobResponse(
+          products,
+          1,
+          products.length
+        )
+      );
+    }
+
+
+
+    /*
+      دریافت چند محصول با شناسه
+    */
+
+    if (Array.isArray(page_uniques)) {
+
+
+      const ids =
+        page_uniques.map(id =>
+          id.replace("wc_","")
+        );
+
+
+      const result =
+        await wcFetch<any[]>(
+          "/products",
+          {
+            include: ids.join(","),
+            per_page:100,
+          }
+        );
+
+
+      const products =
+        result.data.map(item =>
+          mapProductToTorob(
+            adaptProduct(item)
+          )
+        );
+
+
+      return NextResponse.json(
+        createTorobResponse(
+          products,
+          1,
+          products.length
+        )
+      );
+
+    }
+
+
+
+    /*
+      لیست همه محصولات
+    */
+
+    if (
+      page !== undefined &&
+      sort
+    ) {
 
 
       const currentPage =
@@ -65,97 +130,28 @@ export async function POST(
         await wcFetch<any[]>(
           "/products",
           {
-
-            page:
-              currentPage,
-
-            per_page:
-              100,
-
-            orderby:
-              "date",
-
-            order:
-              "desc",
-
+            page: currentPage,
+            per_page:100,
+            orderby:"date",
+            order:"desc",
           }
         );
 
 
       const products =
-        result.data
-          .map(item =>
+        result.data.map(item =>
+          mapProductToTorob(
             adaptProduct(item)
           )
-          .map(product =>
-            mapProductToTorob(product)
-          );
+        );
 
 
       return NextResponse.json(
-
         createTorobResponse(
-
           products,
-
           currentPage,
-
           result.total
-
         )
-
-      );
-
-    }
-
-
-
-    /*
-      دریافت محصول با page_urls
-      فعلاً آماده شده برای توسعه بعدی
-    */
-
-    if (page_urls) {
-
-
-      return NextResponse.json(
-
-        createTorobResponse(
-
-          [],
-
-          1,
-
-          0
-
-        )
-
-      );
-
-    }
-
-
-
-    /*
-      دریافت محصول با page_uniques
-      فعلاً آماده شده برای توسعه بعدی
-    */
-
-    if (page_uniques) {
-
-
-      return NextResponse.json(
-
-        createTorobResponse(
-
-          [],
-
-          1,
-
-          0
-
-        )
-
       );
 
     }
@@ -163,36 +159,29 @@ export async function POST(
 
 
     return NextResponse.json(
-
       {
         error:
-          "invalid request",
+          "invalid request parameters"
       },
-
       {
-        status: 400,
+        status:400
       }
-
     );
 
 
   }
-
   catch(error:any) {
 
 
     return NextResponse.json(
-
       {
         error:
           error.message ||
-          "server error",
+          "server error"
       },
-
       {
-        status:500,
+        status:500
       }
-
     );
 
   }
