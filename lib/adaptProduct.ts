@@ -54,6 +54,12 @@ export function adaptProduct(raw: any): Product {
 
     name: raw?.name ?? "بدون‌نام",
 
+    dateCreated:
+      raw?.date_created,
+
+    dateUpdated:
+      raw?.date_modified,
+    
     type: raw?.type ?? "simple",
 
     variations,
