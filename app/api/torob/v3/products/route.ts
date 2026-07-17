@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { wcFetch } from "@/lib/woocommerce";
-
 import { adaptProduct } from "@/lib/adaptProduct";
-
 import { mapProductToTorob } from "@/lib/torob/mapper";
-
 import { createTorobResponse } from "@/lib/torob/response";
 
 
+// تست ساده با مرورگر
+export async function GET() {
+  return NextResponse.json({
+    status: "Torob API is alive",
+    message: "Use POST request for products",
+  });
+}
+
+
+// API اصلی ترب
 export async function POST(
   req: NextRequest
 ) {
@@ -22,109 +29,168 @@ export async function POST(
       page,
       sort,
       page_urls,
-      page_uniques
+      page_uniques,
 
     } = body;
 
 
     /*
-      ترب یا باید صفحه‌بندی بخواهد
-      یا چند محصول مشخص
+      حالت دریافت لیست محصولات
+      ترب باید page و sort بفرستد
     */
 
-    if (
-      !page &&
-      !page_urls &&
-      !page_uniques
-    ) {
+    if (page !== undefined) {
+
+
+      if (!sort) {
+
+        return NextResponse.json(
+          {
+            error:
+              "sort parameter is not provided",
+          },
+          {
+            status: 400,
+          }
+        );
+
+      }
+
+
+      const currentPage =
+        Number(page);
+
+
+      const result =
+        await wcFetch<any[]>(
+          "/products",
+          {
+
+            page:
+              currentPage,
+
+            per_page:
+              100,
+
+            orderby:
+              "date",
+
+            order:
+              "desc",
+
+          }
+        );
+
+
+      const products =
+        result.data
+          .map(item =>
+            adaptProduct(item)
+          )
+          .map(product =>
+            mapProductToTorob(product)
+          );
+
 
       return NextResponse.json(
-        {
-          error:
-          "invalid request"
-        },
-        {
-          status:400
-        }
+
+        createTorobResponse(
+
+          products,
+
+          currentPage,
+
+          result.total
+
+        )
+
       );
 
     }
 
-
-    let currentPage = 1;
-
-
-    if(page){
-
-      currentPage =
-        Number(page);
-
-    }
 
 
     /*
-      گرفتن محصولات ووکامرس
-      هر صفحه 100 محصول
+      دریافت محصول با page_urls
+      فعلاً آماده شده برای توسعه بعدی
     */
 
-    const result =
-      await wcFetch<any[]>(
-        "/products",
-        {
-          page:
-            currentPage,
+    if (page_urls) {
 
-          per_page:
-            100,
 
-          orderby:
-            "date",
+      return NextResponse.json(
 
-          order:
-            "desc"
+        createTorobResponse(
 
-        }
+          [],
+
+          1,
+
+          0
+
+        )
+
       );
 
+    }
 
-    const products =
-      result.data
-      .map(item =>
-        adaptProduct(item)
-      )
-      .map(product =>
-        mapProductToTorob(product)
+
+
+    /*
+      دریافت محصول با page_uniques
+      فعلاً آماده شده برای توسعه بعدی
+    */
+
+    if (page_uniques) {
+
+
+      return NextResponse.json(
+
+        createTorobResponse(
+
+          [],
+
+          1,
+
+          0
+
+        )
+
       );
 
+    }
 
-    return NextResponse.json(
-
-      createTorobResponse(
-
-        products,
-
-        currentPage,
-
-        result.total
-
-      )
-
-    );
-
-
-  } catch(error:any){
 
 
     return NextResponse.json(
 
       {
         error:
-        error.message ||
-        "server error"
+          "invalid request",
       },
 
       {
-        status:500
+        status: 400,
+      }
+
+    );
+
+
+  }
+
+  catch(error:any) {
+
+
+    return NextResponse.json(
+
+      {
+        error:
+          error.message ||
+          "server error",
+      },
+
+      {
+        status:500,
       }
 
     );
