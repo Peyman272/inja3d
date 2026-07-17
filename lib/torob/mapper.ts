@@ -1,52 +1,65 @@
 import { TorobProduct } from "./types";
+import { Product } from "../types";
 
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.inja3d.ir";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "https://www.inja3d.ir";
 
 
-export function mapProductToTorob(product: any): TorobProduct {
-
-  const price = Number(product.price || 0);
-
+export function mapProductToTorob(
+  product: Product
+): TorobProduct {
 
   return {
 
-    page_unique: `wc_${product.id}`,
+    page_unique:
+      `wc_${product.id}`,
 
-    page_url: `${SITE_URL}/products/${product.slug}`,
-
-    product_group_id: String(product.id),
-
-
-    title: product.name,
-
-    subtitle: product.slug,
+    page_url:
+      `${SITE_URL}/products/${product.slug}`,
 
 
-    // ووکامرس ریال است، ترب تومان می‌خواهد
-    current_price: Math.floor(price / 10),
+    product_group_id:
+      String(product.id),
 
 
-    availability: true,
+    title:
+      product.name,
+
+
+    current_price:
+      Math.round(product.price),
+
+
+    availability:
+      true,
 
 
     image_links:
-      product.images?.map(
-        (img: any) => img.src
-      ) || [],
+      product.images || [],
 
 
     category_name:
-      product.categories?.[0]?.name || "فیگور",
+      product.category || "فیگور",
 
 
     short_desc:
-      product.short_description
-        ? product.short_description.replace(/<[^>]*>/g, "")
-        : "فیگور سه بعدی دست ساز",
+      product.shortDescription || "",
 
 
-    spec: {},
+    spec:
+      product.specs?.reduce(
+        (acc:any, item:any)=>{
+
+          acc[item.label] =
+            item.value;
+
+          return acc;
+
+        },
+        {}
+      ) || {},
 
 
     guarantee:
@@ -54,17 +67,12 @@ export function mapProductToTorob(product: any): TorobProduct {
 
 
     date_added:
-      product.date_created ||
       new Date().toISOString(),
 
 
     date_updated:
-      product.date_modified ||
-      product.date_created ||
       new Date().toISOString()
 
   };
 
 }
-
-
