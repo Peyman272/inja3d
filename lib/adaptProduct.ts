@@ -46,7 +46,12 @@ export function adaptProduct(raw: any): Product {
       }))
     : [];
 
-
+console.log(
+  "WC DATE:",
+  raw?.date_created,
+  raw?.date_modified
+);
+  
   return {
     id: String(raw?.id ?? raw?.slug ?? Math.random()),
 
