@@ -52,10 +52,20 @@ export async function POST(req: NextRequest) {
         `${process.env.NEXT_PUBLIC_SITE_URL}/products/${item.slug}`;
 
 
-      return page_urls.some(url =>
-        decodeURIComponent(url) ===
-        decodeURIComponent(productUrl)
-      );
+      return page_urls.some(url => {
+
+  try {
+
+    return decodeURIComponent(url) ===
+      decodeURIComponent(productUrl);
+
+  } catch {
+
+    return url === productUrl;
+
+  }
+
+});
 
     })
     .map(item =>
