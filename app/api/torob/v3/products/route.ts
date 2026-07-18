@@ -145,13 +145,19 @@ return NextResponse.json(
         );
 
 
-      return NextResponse.json(
-        createTorobResponse(
-          products,
-          1,
-          products.length
-        )
-      );
+   console.log(
+  "TOROB API TIME page_uniques:",
+  Date.now() - start,
+  "ms"
+);
+
+return NextResponse.json(
+  createTorobResponse(
+    products,
+    1,
+    products.length
+  )
+);
 
     }
 
