@@ -56,15 +56,19 @@ if (Array.isArray(page_urls)) {
 
   });
 
-  const products =
+const products =
     result.data
       .filter((item: any) => {
 
-        return requestedSlugs.includes(
-          item.slug
+        return requestedSlugs.some(
+          (slug:string)=>
+            item.slug === slug ||
+            item.slug.includes(slug) ||
+            slug.includes(item.slug)
         );
 
       })
+  
       .map((item: any) =>
         mapProductToTorob(
           adaptProduct(item)
