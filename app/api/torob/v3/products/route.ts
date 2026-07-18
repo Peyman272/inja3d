@@ -132,7 +132,7 @@ if (Array.isArray(page_urls)) {
 
 
       const currentPage =
-        Number(page);
+  Number(page || 1);
 
 
       const result =
