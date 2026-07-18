@@ -6,6 +6,10 @@ import { mapProductToTorob } from "@/lib/torob/mapper";
 import { createTorobResponse } from "@/lib/torob/response";
 
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+
 export async function GET() {
   return NextResponse.json({
     status: "Torob API is alive",
