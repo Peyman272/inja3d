@@ -16,9 +16,8 @@ export function mapProductToTorob(
     page_unique:
       `wc_${product.id}`,
 
-    page_url:
-      `${SITE_URL}/products/${product.slug}`,
-
+   page_url:
+`${SITE_URL}/products/${encodeURIComponent(product.slug)}`,
 
     product_group_id:
       String(product.id),
