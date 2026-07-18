@@ -6,7 +6,7 @@ import { mapProductToTorob } from "@/lib/torob/mapper";
 import { createTorobResponse } from "@/lib/torob/response";
 
 
-export async function GET() {ّ
+export async function GET() {
   return NextResponse.json({
     status: "Torob API is alive",
     message: "Use POST request for products",
