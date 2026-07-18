@@ -54,19 +54,15 @@ console.log(
 );
 
 
-  const requestedSlugs =
-    page_urls.map((url: string) => {
+ const requestedSlugs =
+  page_urls.map((url: string) => {
 
-      const decoded =
-        decodeURIComponent(url);
+    return url
+      .split("/")
+      .filter(Boolean)
+      .pop();
 
-      return decoded
-        .split("/")
-        .filter(Boolean)
-        .pop();
-
-    });
-
+  });
 
   const products =
     result.data
