@@ -35,37 +35,44 @@ export async function POST(req: NextRequest) {
 
     if (Array.isArray(page_urls)) {
 
-      const result =
-        await wcFetch<any[]>(
-          "/products",
-          {
-            per_page:100,
-          }
-        );
+  const result =
+    await wcFetch<any[]>(
+      "/products",
+      {
+        per_page: 100,
+      }
+    );
 
 
-      const products =
-        result.data
-        .filter(item =>
-          page_urls.includes(
-            `${process.env.NEXT_PUBLIC_SITE_URL}/products/${item.slug}`
-          )
-        )
-        .map(item =>
-          mapProductToTorob(
-            adaptProduct(item)
-          )
-        );
+  const products =
+    result.data
+    .filter(item => {
+
+      const productUrl =
+        `${process.env.NEXT_PUBLIC_SITE_URL}/products/${item.slug}`;
 
 
-      return NextResponse.json(
-        createTorobResponse(
-          products,
-          1,
-          products.length
-        )
+      return page_urls.some(url =>
+        decodeURIComponent(url) ===
+        decodeURIComponent(productUrl)
       );
-    }
+
+    })
+    .map(item =>
+      mapProductToTorob(
+        adaptProduct(item)
+      )
+    );
+
+
+  return NextResponse.json(
+    createTorobResponse(
+      products,
+      1,
+      products.length
+    )
+  );
+}
 
 
 
