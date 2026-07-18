@@ -66,15 +66,19 @@ export function mapProductToTorob(
       "تضمین کیفیت چاپ و رنگ آمیزی",
 
 
-   date_added:
-  product.dateCreated ||
-  new Date().toISOString(),
+  date_added:
+  new Date(
+    product.dateCreated ||
+    new Date()
+  ).toISOString(),
 
 
 date_updated:
-  product.dateUpdated ||
-  product.dateCreated ||
-  new Date().toISOString()
+  new Date(
+    product.dateUpdated ||
+    product.dateCreated ||
+    new Date()
+  ).toISOString()
 
   };
 
