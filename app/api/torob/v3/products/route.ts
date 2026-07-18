@@ -102,8 +102,8 @@ const products =
       );
 
 
- console.log(
-  "TOROB API TIME:",
+console.log(
+  "TOROB API TIME page_urls:",
   Date.now() - start,
   "ms"
 );
