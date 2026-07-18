@@ -191,21 +191,28 @@ if (
 
 
       const products =
-        result.data.map(item =>
-          mapProductToTorob(
-            adaptProduct(item)
-          )
-        );
+  result.data.map(item =>
+    mapProductToTorob(
+      adaptProduct(item)
+    )
+  );
 
 
-      return NextResponse.json(
-        createTorobResponse(
-          products,
-          currentPage,
-          result.total
-        )
-      );
+console.log(
+  "TOROB API TIME ALL PRODUCTS:",
+  Date.now() - start,
+  "ms"
+);
 
+
+return NextResponse.json(
+  createTorobResponse(
+    products,
+    currentPage,
+    result.total
+  )
+);
+  
     }
 
 
