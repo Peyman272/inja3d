@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       دریافت چند محصول با URL
     */
 
-    if (Array.isArray(page_urls)) {
+if (Array.isArray(page_urls)) {
 
   const result =
     await wcFetch<any[]>(
@@ -44,30 +44,44 @@ export async function POST(req: NextRequest) {
     );
 
 
+  const requestedSlugs = page_urls.map((url:string)=>{
+
+    const decoded =
+      decodeURIComponent(url);
+
+    return decoded
+      .split("/")
+      .filter(Boolean)
+      .pop();
+
+  });
+
+
   const products =
     result.data
-    .filter(item => {
+    .filter((item:any)=>{
 
-      const productUrl =
-        `${process.env.NEXT_PUBLIC_SITE_URL}/products/${item.slug}`;
-
-
-      return page_urls.some(url => {
-
-  try {
-
-    return decodeURIComponent(url) ===
-      decodeURIComponent(productUrl);
-
-  } catch {
-
-    return url === productUrl;
-
-  }
-
-});
+      return requestedSlugs.includes(
+        item.slug
+      );
 
     })
+    .map(item =>
+      mapProductToTorob(
+        adaptProduct(item)
+      )
+    );
+
+
+  return NextResponse.json(
+    createTorobResponse(
+      products,
+      1,
+      products.length
+    )
+  );
+
+}
     .map(item =>
       mapProductToTorob(
         adaptProduct(item)
