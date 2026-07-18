@@ -60,6 +60,14 @@ const requestedSlugs =
       .trim();
 
   });
+
+
+console.log("REQUESTED SLUGS:", requestedSlugs);
+
+console.log(
+  "WC SLUGS:",
+  result.data.slice(0,10).map((p:any)=>p.slug)
+);
   
 const products =
     result.data
