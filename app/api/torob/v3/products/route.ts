@@ -121,11 +121,11 @@ if (Array.isArray(page_urls)) {
 
 
 
-    /*
-      لیست همه محصولات
-    */
+ /*
+  لیست همه محصولات
+*/
 
-  if (
+if (
   page !== undefined
 ) {
 
