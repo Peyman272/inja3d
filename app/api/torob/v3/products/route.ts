@@ -79,9 +79,11 @@ const products =
   (slug:string)=> {
 
     const productSlug =
-      decodeURIComponent(item.slug || "")
-        .toLowerCase()
-        .trim();
+  decodeURIComponent(
+    decodeURIComponent(item.slug || "")
+  )
+  .toLowerCase()
+  .trim();
 
 
     return (
