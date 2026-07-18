@@ -61,10 +61,13 @@ const products =
       .filter((item: any) => {
 
         return requestedSlugs.some(
-          (slug:string)=>
-            item.slug === slug ||
-            item.slug.includes(slug) ||
-            slug.includes(item.slug)
+          (slug)=>
+            slug &&
+            (
+              item.slug === slug ||
+              item.slug.includes(slug) ||
+              slug.includes(item.slug)
+            )
         );
 
       })
