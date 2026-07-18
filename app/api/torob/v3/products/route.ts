@@ -46,16 +46,21 @@ if (Array.isArray(page_urls)) {
 
 
 
- const requestedSlugs =
+const requestedSlugs =
   page_urls.map((url: string) => {
 
-    return url
-      .split("/")
-      .filter(Boolean)
-      .pop();
+    const slug =
+      url
+        .split("/")
+        .filter(Boolean)
+        .pop();
+
+    return decodeURIComponent(slug || "")
+      .toLowerCase()
+      .trim();
 
   });
-
+  
 const products =
     result.data
       .filter((item: any) => {
