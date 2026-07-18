@@ -44,14 +44,7 @@ if (Array.isArray(page_urls)) {
     );
 
 
-console.log(
-  "FIRST PRODUCTS:",
-  result.data.slice(0,5).map((p:any)=>({
-    id:p.id,
-    slug:p.slug,
-    name:p.name
-  }))
-);
+
 
 
  const requestedSlugs =
