@@ -65,15 +65,23 @@ const products =
     result.data
       .filter((item: any) => {
 
-        return requestedSlugs.some(
-          (slug)=>
-            slug &&
-            (
-              item.slug === slug ||
-              item.slug.includes(slug) ||
-              slug.includes(item.slug)
-            )
-        );
+       return requestedSlugs.some(
+  (slug:string)=> {
+
+    const productSlug =
+      decodeURIComponent(item.slug || "")
+        .toLowerCase()
+        .trim();
+
+
+    return (
+      productSlug === slug ||
+      productSlug.includes(slug) ||
+      slug.includes(productSlug)
+    );
+
+  }
+);
 
       })
   
