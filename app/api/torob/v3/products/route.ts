@@ -29,9 +29,9 @@ export async function POST(req: NextRequest) {
     } = body;
 
 
-    /*
-      دریافت چند محصول با URL
-    */
+/*
+  دریافت چند محصول با URL
+*/
 
 if (Array.isArray(page_urls)) {
 
@@ -44,34 +44,35 @@ if (Array.isArray(page_urls)) {
     );
 
 
-  const requestedSlugs = page_urls.map((url:string)=>{
+  const requestedSlugs =
+    page_urls.map((url: string) => {
 
-    const decoded =
-      decodeURIComponent(url);
+      const decoded =
+        decodeURIComponent(url);
 
-    return decoded
-      .split("/")
-      .filter(Boolean)
-      .pop();
+      return decoded
+        .split("/")
+        .filter(Boolean)
+        .pop();
 
-  });
+    });
 
 
   const products =
     result.data
-    .filter((item:any)=>{
+      .filter((item: any) => {
 
-      return requestedSlugs.includes(
-        item.slug
+        return requestedSlugs.includes(
+          item.slug
+        );
+
+      })
+      .map((item: any) =>
+        mapProductToTorob(
+          adaptProduct(item)
+        )
       );
 
-    })
-    .map(item =>
-      mapProductToTorob(
-        adaptProduct(item)
-      )
-    );
-
 
   return NextResponse.json(
     createTorobResponse(
@@ -82,27 +83,6 @@ if (Array.isArray(page_urls)) {
   );
 
 }
-    .map(item =>
-      mapProductToTorob(
-        adaptProduct(item)
-      )
-    );
-
-
-  return NextResponse.json(
-    createTorobResponse(
-      products,
-      1,
-      products.length
-    )
-  );
-}
-
-
-
-    /*
-      دریافت چند محصول با شناسه
-    */
 
     if (Array.isArray(page_uniques)) {
 
