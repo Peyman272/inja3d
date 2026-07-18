@@ -16,6 +16,8 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
 
+  const start = Date.now();
+
   try {
 
 const body = await req.json().catch(() => ({}));
@@ -100,13 +102,19 @@ const products =
       );
 
 
-  return NextResponse.json(
-    createTorobResponse(
-      products,
-      1,
-      products.length
-    )
-  );
+ console.log(
+  "TOROB API TIME:",
+  Date.now() - start,
+  "ms"
+);
+
+return NextResponse.json(
+  createTorobResponse(
+    products,
+    1,
+    products.length
+  )
+);
 
 }
 
