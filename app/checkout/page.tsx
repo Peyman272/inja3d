@@ -12,8 +12,6 @@ import { useAuth } from "@/lib/auth-context";
 import { formatToman } from "@/lib/format";
 import { Address, Order } from "@/lib/types";
 
-const SHIPPING_COST = 850_000;
-const FREE_SHIPPING_THRESHOLD = 30_000_000;
 
 const provinces = [
   "تهران", "اصفهان", "فارس", "خراسان رضوی", "آذربایجان شرقی",
@@ -37,8 +35,8 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_COST;
-  const total = subtotal + shipping;
+  const shipping = 0;
+  const total = subtotal;
 
   function handleChange<K extends keyof Address>(key: K, value: Address[K]) {
     setAddress((prev) => ({ ...prev, [key]: value }));
