@@ -253,7 +253,7 @@ async function handleSubmit(e: React.FormEvent) {
                   </div>
                   <div className="flex items-center justify-between font-body text-sm">
                     <span className="text-bone-dim">هزینه‌ی ارسال</span>
-                    <span className="text-bone">{shipping === 0 ? "رایگان" : formatToman(shipping)}</span>
+                    <span className="text-bone">پس از هماهنگی</span>
                   </div>
                 </div>
 
