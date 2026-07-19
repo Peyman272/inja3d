@@ -140,7 +140,7 @@ const total = subtotal;
                   <div className="flex items-center justify-between font-body text-sm">
                     <span className="text-bone-dim">هزینه‌ی ارسال</span>
                     <span className="text-bone">
-                      {shipping === 0 ? "رایگان" : formatToman(shipping)}
+                       پس از هماهنگی
                     </span>
                   </div>
                   {shipping > 0 && (
