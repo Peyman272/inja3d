@@ -10,13 +10,10 @@ import QuantityStepper from "@/components/QuantityStepper";
 import { useCart } from "@/lib/cart-context";
 import { formatToman, toPersianDigits } from "@/lib/format";
 
-const SHIPPING_COST = 850_000;
-const FREE_SHIPPING_THRESHOLD = 30_000_000;
-
 export default function CartPage() {
   const { items, updateQty, removeItem, subtotal, itemCount } = useCart();
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_COST;
-  const total = subtotal + shipping;
+  const shipping = 0;
+const total = subtotal;
 
   return (
     <main className="relative">
