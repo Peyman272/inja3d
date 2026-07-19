@@ -193,6 +193,11 @@ if (
           }
         );
 
+  console.log(
+  "بعد از ووکامرس:",
+  Date.now() - start,
+  "ms"
+);
 
       const products =
   result.data.map(item =>
@@ -201,7 +206,12 @@ if (
     )
   );
 
-
+console.log(
+  "بعد از تبدیل:",
+  Date.now() - start,
+  "ms"
+);
+  
 console.log(
   "TOROB API TIME ALL PRODUCTS:",
   Date.now() - start,
