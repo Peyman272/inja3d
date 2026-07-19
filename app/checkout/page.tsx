@@ -250,10 +250,10 @@ async function handleSubmit(e: React.FormEvent) {
                     <span className="text-bone-dim">جمع جزء</span>
                     <span className="text-bone">{formatToman(subtotal)}</span>
                   </div>
-                  <div className="flex items-center justify-between font-body text-sm">
-                <span className="text-bone-dim">هزینه‌ی ارسال</span>
-                <span className="text-bone">پس از هماهنگی</span>
-                </div>
+                 <div className="flex items-center justify-between font-body text-sm">
+                 <span className="text-bone-dim">هزینه‌ی ارسال</span>
+                 <span className="text-bone">پس از هماهنگی</span>
+                 </div>
                 </div>
 
                 <div className="flex items-center justify-between mb-6">
