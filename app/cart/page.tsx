@@ -143,11 +143,7 @@ const total = subtotal;
                        پس از هماهنگی
                     </span>
                   </div>
-                  {shipping > 0 && (
-                    <p className="font-body text-[11px] text-gold/80 leading-relaxed">
-                      با {formatToman(FREE_SHIPPING_THRESHOLD - subtotal)} خرید بیشتر، ارسال رایگان می‌شود.
-                    </p>
-                  )}
+                 
                 </div>
 
                 <div className="flex items-center justify-between mb-8">
