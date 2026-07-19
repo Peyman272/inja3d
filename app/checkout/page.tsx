@@ -35,8 +35,9 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const total = subtotal;
-
+const shipping = 0;
+const total = subtotal;
+  
   function handleChange<K extends keyof Address>(key: K, value: Address[K]) {
     setAddress((prev) => ({ ...prev, [key]: value }));
   }
