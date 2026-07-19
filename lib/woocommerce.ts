@@ -33,7 +33,6 @@ export async function wcFetch<T = any>(
   const res = await fetch(url.toString(), {
     headers: { Authorization: `Basic ${auth}` },
     // در تولید هر ۶۰ ثانیه یک‌بار از ووکامرس رفرش می‌شود (کش Next.js)
-    cache: "force-cache",
 next: { revalidate: 300 },
   });
 
