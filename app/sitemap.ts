@@ -1,26 +1,56 @@
 import { MetadataRoute } from "next";
 
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = "https://www.inja3d.ir";
 
-const products = await fetch(
-"https://wp.inja3d.ir/wp-json/wc/v3/products"
-).then(res => res.json());
+  let products: any[] = [];
 
+  try {
+    const res = await fetch(`${baseUrl}/api/products`, {
+      cache: "no-store",
+    });
 
-const productUrls = products.map((product:any)=>({
- url:`https://www.inja3d.ir/products/${product.slug}`,
- lastModified:new Date(),
-}));
+    if (res.ok) {
+      const data = await res.json();
 
+      // اگر API مستقیم آرایه برگرداند
+      if (Array.isArray(data)) {
+        products = data;
+      }
 
-return [
-{
- url:"https://www.inja3d.ir",
- lastModified:new Date(),
-},
+      // اگر API داخل products باشد
+      if (Array.isArray(data.products)) {
+        products = data.products;
+      }
+    }
+  } catch (error) {
+    console.error("Sitemap products fetch error:", error);
+  }
 
-...productUrls
+  const productUrls = products.map((product) => ({
+    url: `${baseUrl}/products/${product.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
 
-];
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1,
+    },
 
+    {
+      url: `${baseUrl}/shop`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+
+    ...productUrls,
+  ];
 }
