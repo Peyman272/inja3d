@@ -8,33 +8,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let products: any[] = [];
 
   try {
-    const res = await fetch(`${baseUrl}/api/products`, {
-      cache: "no-store",
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-
-      // اگر API مستقیم آرایه برگرداند
-      if (Array.isArray(data)) {
-        products = data;
+    // گرفتن صفحه اول برای فهمیدن تعداد صفحات
+    const firstResponse = await fetch(
+      `${baseUrl}/api/products?page=1`,
+      {
+        cache: "no-store",
       }
+    );
 
-      // اگر API داخل products باشد
-      if (Array.isArray(data.products)) {
-        products = data.products;
-      }
+    const firstData = await firstResponse.json();
+
+    if (Array.isArray(firstData.products)) {
+      products.push(...firstData.products);
     }
+
+    const totalPages = firstData.totalPages || 1;
+
+    // گرفتن بقیه صفحات
+    if (totalPages > 1) {
+      const pages = await Promise.all(
+        Array.from(
+          { length: totalPages - 1 },
+          (_, i) =>
+            fetch(
+              `${baseUrl}/api/products?page=${i + 2}`,
+              {
+                cache: "no-store",
+              }
+            ).then((res) => res.json())
+        )
+      );
+
+      pages.forEach((pageData) => {
+        if (Array.isArray(pageData.products)) {
+          products.push(...pageData.products);
+        }
+      });
+    }
+
   } catch (error) {
-    console.error("Sitemap products fetch error:", error);
+    console.error("Sitemap error:", error);
   }
 
-  const productUrls = products.map((product) => ({
-    url: `${baseUrl}/products/${product.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
 
   return [
     {
@@ -43,7 +58,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 1,
     },
-
     {
       url: `${baseUrl}/shop`,
       lastModified: new Date(),
@@ -51,6 +65,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
 
-    ...productUrls,
+    ...products.map((product) => ({
+      url: `${baseUrl}/products/${product.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
   ];
 }
